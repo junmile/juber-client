@@ -3,8 +3,7 @@ import * as styledComponents from 'styled-components/native';
 import { DefaultTheme } from 'styled-components';
 
 interface IThemeInterface {
-  primaryColor: string;
-  primaryColorInverted: string;
+  blueColor: string;
 }
 
 const myTheme: DefaultTheme = {
@@ -18,10 +17,11 @@ const myTheme: DefaultTheme = {
 const {
   default: styled,
   css,
-  ThemeProvider
+  ThemeProvider,
+  createGlobalStyle
 } = styledComponents as styledComponents.ReactNativeThemedStyledComponentsModule<
   IThemeInterface
 >;
 
-export { css, ThemeProvider };
+export { css, ThemeProvider, createGlobalStyle };
 export default styled;
