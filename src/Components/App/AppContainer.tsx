@@ -1,18 +1,16 @@
 import React from 'react';
 import { IS_LOGGED_IN } from './AppQueries';
-import reset from 'styled-reset';
 import { graphql } from 'react-apollo';
 import AppPresenter from './AppPresenter';
-import { createGlobalStyle, ThemeProvider } from '../../typed-components';
+import { ThemeProvider } from '../../typed-components';
 import theme from '../../theme';
-
-
-const GlobalStyle = createGlobalStyle`${reset}`;
+import '../../global-styles';
 
 const AppContainer = ({ data }: { data?: any }) => (
-  <GlobalStyle/>
   <ThemeProvider theme={theme}>
-    <AppPresenter isLoggedIn={data.auth.isLoggedIn} />
+    <>
+      <AppPresenter isLoggedIn={data.auth.isLoggedIn} />
+    </>
   </ThemeProvider>
 );
 
