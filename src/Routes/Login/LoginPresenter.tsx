@@ -64,7 +64,7 @@ const SocialLink = styled.span`
 const Background = styled.div`
   color: #4a4a4a;
   height: 100%;
-  background: url(${bgImage}) no-repeat;
+  background: url(${bgImage});
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
@@ -97,7 +97,10 @@ const OutHomePresenter: React.SFC<IProps> = () => (
             <PhoneLogin>
               <Subtitle>Get moving with Juber</Subtitle>
               <FakeInput>
-                🇰🇷 +82 <Grey>Enter your mobile number</Grey>
+                <span role="img" aria-label="">
+                  🇰🇷 +82
+                </span>
+                <Grey>Enter your mobile number</Grey>
               </FakeInput>
             </PhoneLogin>
           </Link>
