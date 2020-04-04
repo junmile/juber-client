@@ -1,6 +1,7 @@
 import React from 'react';
 import PhoneLoginPresenter from './PhoneLoginPresenter';
 import { RouteComponentProps } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface IState {
   countryCode: string;
@@ -42,7 +43,15 @@ class PhoneLoginContainer extends React.Component<
     event.preventDefault();
     const { countryCode, phoneNumber } = this.state;
 
-    console.log(countryCode, phoneNumber);
+    const isVaild = /^\+[1-9]{1}[0-9]{7,11}$/.test(
+      `${countryCode}${phoneNumber}`
+    );
+    console.log(isVaild);
+    if (isVaild) {
+      return;
+    } else {
+      toast.error('전화번호 형식이 맞지 않습니다.');
+    }
   };
 }
 
