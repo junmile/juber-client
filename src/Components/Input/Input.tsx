@@ -26,20 +26,26 @@ interface IProps {
   placeholder?: string;
   type?: string;
   required?: boolean;
-  value: any;
+  value: string;
+  name?: string;
+  onChange: any;
 }
 
 const Input: React.SFC<IProps> = ({
   placeholder = '',
   type = 'text',
   required = true,
-  value
+  value,
+  name = '',
+  onChange
 }) => (
   <Container
+    name={name}
     type={type}
     required={required}
     value={value}
     placeholder={placeholder}
+    onChange={onChange}
   />
 );
 
