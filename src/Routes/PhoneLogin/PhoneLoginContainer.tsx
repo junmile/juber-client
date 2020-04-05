@@ -2,11 +2,19 @@ import React from 'react';
 import PhoneLoginPresenter from './PhoneLoginPresenter';
 import { RouteComponentProps } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Mutation } from 'react-apollo';
+import { PHONE_SIGN_IN } from './PhoneQueries';
 
 interface IState {
   countryCode: string;
   phoneNumber: string;
 }
+
+interface IMutationInterface {
+  phoneNumber: string;
+}
+
+class PhonesignInMutation extends Mutation<any, IMutationInterface> {}
 
 class PhoneLoginContainer extends React.Component<
   RouteComponentProps<any>,
@@ -14,44 +22,53 @@ class PhoneLoginContainer extends React.Component<
 > {
   public state = {
     countryCode: '+82',
-    phoneNumber: ''
+    phoneNumber: '',
   };
 
   public render() {
     const { countryCode, phoneNumber } = this.state;
     return (
-      <PhoneLoginPresenter
-        countryCode={countryCode}
-        phoneNumber={phoneNumber}
-        onInputChange={this.onInputChange}
-        onSubmit={this.onSubmit}
-      />
+      <PhonesignInMutation
+        mutation={PHONE_SIGN_IN}
+        variables={{ phoneNumber: `${countryCode}${phoneNumber}` }}
+      >
+        {(mutation, { loading }) => {
+          const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+            event.preventDefault();
+
+            const isVaild = /^\+[1-9]{1}[0-9]{7,11}$/.test(
+              `${countryCode}${phoneNumber}`
+            );
+            console.log(isVaild);
+            if (isVaild) {
+              mutation();
+            } else {
+              toast.error('전화번호 형식이 맞지 않습니다.');
+            }
+          };
+          return (
+            <PhoneLoginPresenter
+              countryCode={countryCode}
+              phoneNumber={phoneNumber}
+              onInputChange={this.onInputChange}
+              onSubmit={onSubmit}
+              loading={loading}
+            />
+          );
+        }}
+      </PhonesignInMutation>
     );
   }
+
   public onInputChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement
   > = (event) => {
     const {
-      target: { name, value }
+      target: { name, value },
     } = event;
     this.setState({
-      [name]: value
+      [name]: value,
     } as any);
-  };
-
-  public onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
-    const { countryCode, phoneNumber } = this.state;
-
-    const isVaild = /^\+[1-9]{1}[0-9]{7,11}$/.test(
-      `${countryCode}${phoneNumber}`
-    );
-    console.log(isVaild);
-    if (isVaild) {
-      return;
-    } else {
-      toast.error('전화번호 형식이 맞지 않습니다.');
-    }
   };
 }
 
