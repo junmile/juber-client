@@ -8,14 +8,13 @@ import {
   startPhoneVerification,
   startPhoneVerificationVariables,
 } from '../../types/api';
-import { MutationUpdaterFn } from 'apollo-boost';
 
 interface IState {
   countryCode: string;
   phoneNumber: string;
 }
 
-class PhonesignInMutation extends Mutation<
+class PhoneSignInMutation extends Mutation<
   startPhoneVerification,
   startPhoneVerificationVariables
 > {}
@@ -32,10 +31,17 @@ class PhoneLoginContainer extends React.Component<
   public render() {
     const { countryCode, phoneNumber } = this.state;
     return (
-      <PhonesignInMutation
+      <PhoneSignInMutation
         mutation={PHONE_SIGN_IN}
         variables={{ phoneNumber: `${countryCode}${phoneNumber}` }}
-        update={this.afterSubmit}
+        onCompleted={(data) => {
+          const { StartPhoneVerification } = data;
+          if (StartPhoneVerification.ok) {
+            return;
+          } else {
+            toast.error(StartPhoneVerification.error);
+          }
+        }}
       >
         {(mutation, { loading }) => {
           const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -61,7 +67,7 @@ class PhoneLoginContainer extends React.Component<
             />
           );
         }}
-      </PhonesignInMutation>
+      </PhoneSignInMutation>
     );
   }
 
@@ -74,10 +80,6 @@ class PhoneLoginContainer extends React.Component<
     this.setState({
       [name]: value,
     } as any);
-  };
-
-  public afterSubmit: MutationUpdaterFn = (cache, data) => {
-    console.log(data);
   };
 }
 
