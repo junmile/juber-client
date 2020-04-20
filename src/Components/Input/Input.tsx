@@ -3,7 +3,7 @@ import styled from '../../typed-components';
 
 const Container = styled.input`
   border: none;
-  border-bottom: 2px solid ${(props) => props.theme.greyColor};
+  // border-bottom: 2px solid ${(props) => props.theme.greyColor};
   font-size: 20px;
   width: 100%;
   padding-bottom: 10px;
@@ -37,7 +37,7 @@ const Input: React.SFC<IProps> = ({
   required = true,
   value,
   name = '',
-  onChange
+  onChange,
 }) => (
   <Container
     name={name}

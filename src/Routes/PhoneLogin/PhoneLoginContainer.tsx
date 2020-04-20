@@ -29,6 +29,7 @@ class PhoneLoginContainer extends React.Component<
   };
 
   public render() {
+    const { history } = this.props;
     const { countryCode, phoneNumber } = this.state;
     return (
       <PhoneSignInMutation
@@ -46,13 +47,17 @@ class PhoneLoginContainer extends React.Component<
         {(mutation, { loading }) => {
           const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
             event.preventDefault();
-
-            const isVaild = /^\+[1-9]{1}[0-9]{7,11}$/.test(
-              `${countryCode}${phoneNumber}`
-            );
+            const phone = `${countryCode}${phoneNumber}`;
+            const isVaild = /^\+[1-9]{1}[0-9]{7,12}$/.test(phone);
             console.log(isVaild);
             if (isVaild) {
-              mutation();
+              //mutation();
+              history.push({
+                pathname: '/verify-phone',
+                state: {
+                  phoneNumber: phone,
+                },
+              });
             } else {
               toast.error('전화번호 형식이 맞지 않습니다.');
             }

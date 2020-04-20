@@ -40,7 +40,7 @@ const Form = styled.form``;
 
 const Button = styled.button`
   box-shadow: 0 18px 35px rgba(50, 50, 93, 0.1), 0 8px 15px rgba(0, 0, 0, 0.07);
-  background-color: black;
+  background-color: #fcc159;
   color: white;
   padding: 20px;
   border-radius: 50%;
