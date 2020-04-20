@@ -37,8 +37,17 @@ class PhoneLoginContainer extends React.Component<
         variables={{ phoneNumber: `${countryCode}${phoneNumber}` }}
         onCompleted={(data) => {
           const { StartPhoneVerification } = data;
+          const phone = `${countryCode}${phoneNumber}`;
           if (StartPhoneVerification.ok) {
-            return;
+            toast.success('문자를 확인해 주세요.');
+            setTimeout(() => {
+              history.push({
+                pathname: '/verify-phone',
+                state: {
+                  phoneNumber: phone,
+                },
+              });
+            }, 2000);
           } else {
             toast.error(StartPhoneVerification.error);
           }
@@ -49,15 +58,8 @@ class PhoneLoginContainer extends React.Component<
             event.preventDefault();
             const phone = `${countryCode}${phoneNumber}`;
             const isVaild = /^\+[1-9]{1}[0-9]{7,12}$/.test(phone);
-            console.log(isVaild);
             if (isVaild) {
-              //mutation();
-              history.push({
-                pathname: '/verify-phone',
-                state: {
-                  phoneNumber: phone,
-                },
-              });
+              mutation();
             } else {
               toast.error('전화번호 형식이 맞지 않습니다.');
             }
