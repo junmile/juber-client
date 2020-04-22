@@ -28,6 +28,7 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
       };
     }
   }
+
   public render() {
     const { verificationKey, phoneNumber } = this.state;
     return (
@@ -40,7 +41,8 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
         onCompleted={(data) => {
           const { CompletePhoneVerification } = data;
           if (CompletePhoneVerification.ok) {
-            return;
+            console.log(CompletePhoneVerification);
+            toast.success('확인되었습니다. 로그인하세요');
           } else {
             toast.error(CompletePhoneVerification.error);
           }
