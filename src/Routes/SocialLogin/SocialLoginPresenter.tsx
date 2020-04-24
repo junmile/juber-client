@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import BackArrow from '../../Components/BackArrow/BackArrow';
 import styled from '../../typed-components';
+import { MutationFn } from 'react-apollo';
 
 const Container = styled.div`
   margin-top: 30px;
@@ -29,7 +30,11 @@ const BackArrowExtended = styled(BackArrow)`
   left: 20px;
 `;
 
-const SocialLoginPresenter = () => (
+interface Iprops {
+  loginCallBack: MutationFn;
+}
+
+const SocialLoginPresenter: React.SFC<Iprops> = ({ loginCallBack }) => (
   <Container>
     <Helmet>
       <title>Social Login | Juber</title>

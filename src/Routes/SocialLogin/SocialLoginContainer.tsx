@@ -19,11 +19,17 @@ interface IState {
 
 interface IProps extends RouteComponentProps<any> {}
 
-class SocialLoginContainer extends React.Component<IState, IProps> {
+class SocialLoginContainer extends React.Component<IProps, IState> {
   public render() {
+    const { firstName, lastName, email, fbId } = this.state;
     return (
-      <LoginMutation mutation={FACEBOOK_CONNECT}>
-        <SocialLoginPresenter />
+      <LoginMutation
+        mutation={FACEBOOK_CONNECT}
+        variables={{ firstName, lastName, email, fbId }}
+      >
+        {(facebookConnect, { loading }) => (
+          <SocialLoginPresenter loginCallBack={facebookConnect} />
+        )}
       </LoginMutation>
     );
   }
