@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import BackArrow from '../../Components/BackArrow/BackArrow';
 import styled from '../../typed-components';
-import { MutationFn } from 'react-apollo';
 
 const Container = styled.div`
   margin-top: 30px;
@@ -18,6 +17,7 @@ const Title = styled.h2`
 const Link = styled.span`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Icon = styled.span`
@@ -30,11 +30,11 @@ const BackArrowExtended = styled(BackArrow)`
   left: 20px;
 `;
 
-interface Iprops {
-  loginCallBack: MutationFn;
+interface IProps {
+  loginCallback: (response) => void;
 }
 
-const SocialLoginPresenter: React.SFC<Iprops> = ({ loginCallBack }) => (
+const SocialLoginPresenter: React.SFC<IProps> = ({ loginCallback }) => (
   <Container>
     <Helmet>
       <title>Social Login | Juber</title>
@@ -43,9 +43,9 @@ const SocialLoginPresenter: React.SFC<Iprops> = ({ loginCallBack }) => (
     <BackArrowExtended backTo={'/'} />
     <FacebookLogin
       appId="227207361896041"
-      autoLoad={true}
-      fields="name,email,picture"
-      callback={null}
+      autoLoad={false}
+      fields="name, first_name, last_name, email"
+      callback={loginCallback}
       render={(renderProps) => (
         <Link onClick={renderProps.onClick}>
           <Icon>

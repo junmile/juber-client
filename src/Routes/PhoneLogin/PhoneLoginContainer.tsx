@@ -2,7 +2,7 @@ import React from 'react';
 import PhoneLoginPresenter from './PhoneLoginPresenter';
 import { RouteComponentProps } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Mutation } from 'react-apollo';
+import { Mutation, MutationFn } from 'react-apollo';
 import { PHONE_SIGN_IN } from './PhoneQueries';
 import {
   startPhoneVerification,
@@ -23,6 +23,9 @@ class PhoneLoginContainer extends React.Component<
   RouteComponentProps<any>,
   IState
 > {
+  public phoneMutation:
+    | MutationFn<startPhoneVerification, startPhoneVerificationVariables>
+    | undefined = undefined;
   public state = {
     countryCode: '+82',
     phoneNumber: '',
@@ -53,23 +56,14 @@ class PhoneLoginContainer extends React.Component<
           }
         }}
       >
-        {(mutation, { loading }) => {
-          const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-            event.preventDefault();
-            const phone = `${countryCode}${phoneNumber}`;
-            const isVaild = /^\+[1-9]{1}[0-9]{7,12}$/.test(phone);
-            if (isVaild) {
-              mutation();
-            } else {
-              toast.error('전화번호 형식이 맞지 않습니다.');
-            }
-          };
+        {(phoneMutation, { loading }) => {
+          this.phoneMutation = phoneMutation;
           return (
             <PhoneLoginPresenter
               countryCode={countryCode}
               phoneNumber={phoneNumber}
               onInputChange={this.onInputChange}
-              onSubmit={onSubmit}
+              onSubmit={this.onSubmit}
               loading={loading}
             />
           );
@@ -87,6 +81,18 @@ class PhoneLoginContainer extends React.Component<
     this.setState({
       [name]: value,
     } as any);
+  };
+
+  public onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    const { countryCode, phoneNumber } = this.state;
+    const phone = `${countryCode}${phoneNumber}`;
+    const isVaild = /^\+[1-9]{1}[0-9]{7,12}$/.test(phone);
+    if (isVaild && this.phoneMutation) {
+      this.phoneMutation();
+    } else {
+      toast.error('전화번호 형식이 맞지 않습니다.');
+    }
   };
 }
 

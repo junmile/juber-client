@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface startPhoneVerification_StartPhoneVerification {
-  __typename: "StartPhoneVerificationResponse";
+  __typename: 'StartPhoneVerificationResponse';
   ok: boolean;
   error: string | null;
 }
@@ -31,7 +31,7 @@ export interface startPhoneVerificationVariables {
 // ====================================================
 
 export interface facebookConnect_FacebookConnect {
-  __typename: "FacebookConnectResponse";
+  __typename: 'FacebookConnectResponse';
   ok: boolean;
   error: string | null;
   token: string | null;
@@ -58,7 +58,7 @@ export interface facebookConnectVariables {
 // ====================================================
 
 export interface verifyPhone_CompletePhoneVerification {
-  __typename: "CompletePhoneVerificationResponse";
+  __typename: 'CompletePhoneVerificationResponse';
   ok: boolean;
   error: string | null;
   token: string | null;
