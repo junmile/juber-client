@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from '../../typed-components';
+import { userProfile } from '../../types/api';
 
 const Container = styled.div`
   height: 100%;
@@ -74,7 +75,17 @@ const ToggleDriving = styled<IToggleProps, any>('button')`
   cursor: pointer;
 `;
 
-const MenuPresenter: React.SFC = () => (
+interface IProps {
+  data?: userProfile;
+  loading: boolean;
+}
+
+const MenuPresenter: React.SFC<IProps> = ({
+  data: {
+    GetMyProfile: { user },
+  },
+  loading,
+}) => (
   <Container>
     <Header>
       <Grid>
