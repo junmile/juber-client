@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface startPhoneVerification_StartPhoneVerification {
-  __typename: 'StartPhoneVerificationResponse';
+  __typename: "StartPhoneVerificationResponse";
   ok: boolean;
   error: string | null;
 }
@@ -31,7 +31,7 @@ export interface startPhoneVerificationVariables {
 // ====================================================
 
 export interface facebookConnect_FacebookConnect {
-  __typename: 'FacebookConnectResponse';
+  __typename: "FacebookConnectResponse";
   ok: boolean;
   error: string | null;
   token: string | null;
@@ -58,7 +58,7 @@ export interface facebookConnectVariables {
 // ====================================================
 
 export interface verifyPhone_CompletePhoneVerification {
-  __typename: 'CompletePhoneVerificationResponse';
+  __typename: "CompletePhoneVerificationResponse";
   ok: boolean;
   error: string | null;
   token: string | null;
@@ -71,6 +71,33 @@ export interface verifyPhone {
 export interface verifyPhoneVariables {
   key: string;
   phoneNumber: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: userProfile
+// ====================================================
+
+export interface userProfile_GetMyProfile_user {
+  __typename: "User";
+  profilePhoto: string | null;
+  isDriving: boolean;
+  fullName: string | null;
+}
+
+export interface userProfile_GetMyProfile {
+  __typename: "GetMyProfileResponse";
+  ok: boolean;
+  error: string | null;
+  user: userProfile_GetMyProfile_user | null;
+}
+
+export interface userProfile {
+  GetMyProfile: userProfile_GetMyProfile;
 }
 
 /* tslint:disable */

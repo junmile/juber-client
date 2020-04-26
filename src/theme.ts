@@ -1,6 +1,8 @@
 const theme = {
   blueColor: '#3498db',
-  greyColor: '#7f8c8d'
+  greyColor: '#7f8c8d',
+  yellowColor: '#fcc159',
+  greenColor: '#77a832',
 };
 
 export default theme;
