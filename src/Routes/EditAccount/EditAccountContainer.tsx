@@ -1,9 +1,9 @@
 import React from 'react';
-import { Mutation, MutationFn } from 'react-apollo';
-import { RouteComponentProps } from 'react-router-dom';
+import { Mutation } from 'react-apollo';
 import { updateProfile, updateProfileVariables } from '../../types/api';
-import EditAccountPresenter from './EditAccountPresenter';
+import { RouteComponentProps } from 'react-router-dom';
 import { UPDATE_PROFILE } from './EditAccountQueries';
+import EditAccountPresenter from './EditAccountPresenter';
 
 class UpdateProfileMutation extends Mutation<
   updateProfile,
@@ -56,13 +56,8 @@ class EditAccountContainer extends React.Component<IProps, IState> {
   public onInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
-    const {
-      target: { name, value },
-    } = event;
-
-    this.setState({
-      [name]: value,
-    } as any);
+    const { name, value } = event.target;
+    this.setState({ [name]: value } as any);
   };
 }
 
