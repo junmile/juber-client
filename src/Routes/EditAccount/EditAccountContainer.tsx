@@ -9,6 +9,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { UPDATE_PROFILE } from './EditAccountQueries';
 import EditAccountPresenter from './EditAccountPresenter';
 import { USER_PROFILE } from '../../sharedQueries.queries';
+import { toast } from 'react-toastify';
 
 class UpdateProfileMutation extends Mutation<
   updateProfile,
@@ -41,11 +42,20 @@ class EditAccountContainer extends React.Component<IProps, IState> {
         {() => (
           <UpdateProfileMutation
             mutation={UPDATE_PROFILE}
+            refetchQueries={[{ query: USER_PROFILE }]}
             variables={{
               email,
               firstName,
               lastName,
               profilePhoto,
+            }}
+            onCompleted={(data) => {
+              const { UpdateMyProfile } = data;
+              if (UpdateMyProfile.ok) {
+                toast.success('프로필이 성공적으로 변경 되었습니다.');
+              } else {
+                toast.error(UpdateMyProfile.error);
+              }
             }}
           >
             {(updateProfileFn, { loading }) => (
