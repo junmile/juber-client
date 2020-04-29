@@ -1,12 +1,14 @@
 import React from 'react';
 import { MutationFn } from 'react-apollo';
 import Helmet from 'react-helmet';
+import styled from '../../typed-components';
+
 import Button from '../../Components/Button';
 import Form from '../../Components/Form';
 import Header from '../../Components/Header';
 import Input from '../../Components/Input';
-import styled from '../../typed-components';
-import { updateProfile, updateProfileVariables } from '../../types/api';
+import PhotoInput from '../../Components/PhotoInput';
+import { updateProfileVariables, updateProfile } from '../../types/api';
 
 const Container = styled.div``;
 
@@ -19,23 +21,25 @@ const ExtendedInput = styled(Input)`
 `;
 
 interface IProps {
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
   profilePhoto: string;
-  onSubmit: MutationFn<updateProfile, updateProfileVariables>;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: any;
   loading: boolean;
+  onSubmit: MutationFn<updateProfile, updateProfileVariables>;
+  uploading: boolean;
 }
 
 const EditAccountPresenter: React.SFC<IProps> = ({
+  email,
   firstName,
   lastName,
-  email,
-  onSubmit,
   profilePhoto,
   onInputChange,
   loading,
+  onSubmit,
+  uploading,
 }) => (
   <Container>
     <Helmet>
@@ -43,28 +47,33 @@ const EditAccountPresenter: React.SFC<IProps> = ({
     </Helmet>
     <Header title={'Edit Account'} backTo={'/'} />
     <ExtendedForm submitFn={onSubmit}>
-      <ExtendedInput
+      <PhotoInput
+        uploading={false}
+        fileUrl={profilePhoto}
         onChange={onInputChange}
-        type={'text'}
+      />
+      <ExtendedInput
+        type="text"
+        name="firstName"
         value={firstName}
-        placeholder={'First name'}
-        name={'firstName'}
+        placeholder={'First Name'}
+        onChange={onInputChange}
       />
       <ExtendedInput
-        onChange={onInputChange}
-        type={'text'}
+        type="text"
+        name="lastName"
         value={lastName}
-        placeholder={'Last name'}
-        name={'lastName'}
+        placeholder={'Last Name'}
+        onChange={onInputChange}
       />
       <ExtendedInput
-        onChange={onInputChange}
-        type={'email'}
+        type="email"
+        name="email"
         value={email}
         placeholder={'Email'}
-        name={'email'}
+        onChange={onInputChange}
       />
-      <Button onClick={null} value={loading ? 'Loading' : 'Update'} />
+      <Button value={loading ? 'Loading..' : 'Update'} onClick={null} />
     </ExtendedForm>
   </Container>
 );

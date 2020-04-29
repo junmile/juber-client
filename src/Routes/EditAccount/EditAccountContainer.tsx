@@ -10,6 +10,7 @@ import { UPDATE_PROFILE } from './EditAccountQueries';
 import EditAccountPresenter from './EditAccountPresenter';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 class UpdateProfileMutation extends Mutation<
   updateProfile,
@@ -23,6 +24,8 @@ interface IState {
   lastName: string;
   email: string;
   profilePhoto: string;
+  uploading: boolean;
+  file?: Blob;
 }
 
 class ProfileQuery extends Query<userProfile> {}
@@ -33,12 +36,17 @@ class EditAccountContainer extends React.Component<IProps, IState> {
     firstName: '',
     lastName: '',
     profilePhoto: '',
+    uploading: false,
   };
 
   public render() {
-    const { email, firstName, lastName, profilePhoto } = this.state;
+    const { email, firstName, lastName, profilePhoto, uploading } = this.state;
     return (
-      <ProfileQuery query={USER_PROFILE} onCompleted={this.updateFields}>
+      <ProfileQuery
+        query={USER_PROFILE}
+        onCompleted={this.updateFields}
+        fetchPolicy={'cache-and-network'}
+      >
         {() => (
           <UpdateProfileMutation
             mutation={UPDATE_PROFILE}
@@ -67,6 +75,7 @@ class EditAccountContainer extends React.Component<IProps, IState> {
                 onInputChange={this.onInputChange}
                 loading={loading}
                 onSubmit={updateProfileFn}
+                uploading={uploading}
               />
             )}
           </UpdateProfileMutation>
@@ -74,11 +83,31 @@ class EditAccountContainer extends React.Component<IProps, IState> {
       </ProfileQuery>
     );
   }
-  public onInputChange: React.ChangeEventHandler<HTMLInputElement> = (
+  public onInputChange: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value } as any);
+    const {
+      target: { name, value, files },
+    } = event;
+    console.log(files);
+    if (files) {
+      this.setState({
+        uploading: true,
+      });
+      const formData = new FormData();
+      formData.append('file', files[0]);
+      formData.append('api_key', '111132645848858');
+      formData.append('upload_preset', 'juber');
+      formData.append('timestamp', String(Date.now() / 1000));
+      const request = await axios.post(
+        'https://api.cloudinary.com/v1_1/dejkxwm5u/image/upload',
+        formData
+      );
+      console.log(request);
+    }
+    this.setState({
+      [name]: value,
+    } as any);
   };
 
   public updateFields = (data: {} | userProfile) => {
@@ -93,6 +122,7 @@ class EditAccountContainer extends React.Component<IProps, IState> {
           lastName,
           email,
           profilePhoto,
+          uploaded: profilePhoto !== null,
         } as any);
       }
     }
