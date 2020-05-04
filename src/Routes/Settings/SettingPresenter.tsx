@@ -8,7 +8,7 @@ import styled from '../../typed-components';
 import { getPlaces, userProfile } from '../../types/api';
 
 const Container = styled.div`
-  padding: 0px 40px;
+  padding: 40px;
 `;
 
 const Image = styled.img`
@@ -83,6 +83,7 @@ const SettingsPresenter: React.SFC<IProps> = ({
         places.map((place) => (
           <Place
             key={place!.id}
+            id={place!.id}
             fav={place!.isFav}
             name={place!.name}
             address={place!.address}
