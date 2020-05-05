@@ -12,6 +12,7 @@ interface IState {
   name: string;
   lng: number;
   lat: number;
+  pickedAddress: boolean;
 }
 
 interface IProps extends RouteComponentProps<any> {}
@@ -19,7 +20,13 @@ interface IProps extends RouteComponentProps<any> {}
 class AddPlaceQuery extends Mutation<addPlace, addPlaceVariables> {}
 
 class AddPlaceContainer extends React.Component<IProps, IState> {
-  public state = { address: '', name: '', lng: 1.234, lat: 1.234 };
+  public state = {
+    address: '',
+    name: '',
+    lng: 0,
+    lat: 0,
+    pickedAddress: false,
+  };
   public render() {
     const { address, name, lat, lng } = this.state;
     const { history } = this.props;
@@ -47,6 +54,7 @@ class AddPlaceContainer extends React.Component<IProps, IState> {
             name={name}
             loading={loading}
             onSubmit={addPlaceFn}
+            pickedAddress={lat !== 0 && lng !== 0}
           />
         )}
       </AddPlaceQuery>
