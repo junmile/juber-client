@@ -2,7 +2,12 @@ import React from 'react';
 import FindAddressPresenter from './FindAddressPresenter';
 import ReactDOM from 'react-dom';
 
-class FindAddressContainer extends React.Component<any> {
+interface IState {
+  lat: number;
+  lng: number;
+}
+
+class FindAddressContainer extends React.Component<any, IState> {
   // 맵오브젝트를 저장함
   public mapRef: any;
   //@ts-ignore
@@ -27,6 +32,10 @@ class FindAddressContainer extends React.Component<any> {
     const {
       coords: { latitude, longitude },
     } = position;
+    this.setState({
+      lat: latitude,
+      lng: longitude,
+    });
     this.loadMap(latitude, longitude);
   };
 
@@ -41,9 +50,22 @@ class FindAddressContainer extends React.Component<any> {
     const mapConfig: google.maps.MapOptions = {
       center: { lat, lng },
       disableDefaultUI: true,
-      zoom: 11,
+      zoom: 18,
     };
     this.map = new maps.Map(mapNode, mapConfig);
+    this.map.addListener('dragend', this.handleDragEnd);
+  };
+
+  public handleDragEnd = () => {
+    const newCenter = this.map.getCenter();
+    console.log(newCenter);
+    const lat = newCenter.lat();
+    const lng = newCenter.lng();
+    console.log(lat, lng);
+    this.setState({
+      lat,
+      lng,
+    });
   };
 }
 
