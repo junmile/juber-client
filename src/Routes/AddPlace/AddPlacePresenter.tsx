@@ -10,7 +10,7 @@ import { MutationFn, MutationResult } from 'react-apollo';
 import { addPlace, addPlaceVariables } from '../../types/api';
 
 const Container = styled.div`
-  padding: 0 40px;
+  padding: 40px;
 `;
 
 const ExtendedInput = styled(Input)`
@@ -61,7 +61,7 @@ const AddPlacePresenter: React.SFC<IProps> = ({
           onChange={onInputChange}
           value={address}
         />
-        <ExtendedLink>지도에서 장소 선택</ExtendedLink>
+        <ExtendedLink to={'/find-address'}>지도에서 장소 선택</ExtendedLink>
         {pickedAddress && (
           <Button
             onClick={null}
