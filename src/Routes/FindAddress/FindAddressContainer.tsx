@@ -1,7 +1,7 @@
 import React from 'react';
 import FindAddressPresenter from './FindAddressPresenter';
 import ReactDOM from 'react-dom';
-import { reverseGeoCode } from '../../mapHelpers';
+import { reverseGeoCode, geoCode } from '../../mapHelpers';
 
 interface IState {
   lat: number;
@@ -56,6 +56,7 @@ class FindAddressContainer extends React.Component<any, IState> {
       lng: longitude,
     });
     this.loadMap(latitude, longitude);
+    this.reversGeocodeAddress(latitude, longitude);
   };
 
   public handleGeoError = () => {
@@ -75,7 +76,7 @@ class FindAddressContainer extends React.Component<any, IState> {
     this.map.addListener('dragend', this.handleDragEnd);
   };
 
-  public handleDragEnd = async () => {
+  public handleDragEnd = () => {
     if (!this.map) {
       return;
     }
@@ -83,12 +84,8 @@ class FindAddressContainer extends React.Component<any, IState> {
     const lat = newCenter.lat();
     const lng = newCenter.lng();
     console.log(lat, lng);
-    const reversedAddress = await reverseGeoCode(lat, lng);
-    this.setState({
-      lat,
-      lng,
-      address: reversedAddress,
-    });
+    this.setState({ lat, lng });
+    this.reversGeocodeAddress(lat, lng);
   };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,11 +95,21 @@ class FindAddressContainer extends React.Component<any, IState> {
     this.setState({
       [name]: value,
     } as any);
-    console.log(this);
   };
 
   public onInputBlur = () => {
-    console.log('Address updated');
+    const { address } = this.state;
+    const a = geoCode(address);
+    console.log(a);
+  };
+  public reversGeocodeAddress = async (lat: number, lng: number) => {
+    const reversedAddress = await reverseGeoCode(lat, lng);
+    //axios를 신경써줘야하기때문에 나누어서
+    if (reversedAddress !== false) {
+      this.setState({
+        address: reversedAddress,
+      });
+    }
   };
 }
 
