@@ -75,7 +75,7 @@ class FindAddressContainer extends React.Component<any, IState> {
     this.map.addListener('dragend', this.handleDragEnd);
   };
 
-  public handleDragEnd = () => {
+  public handleDragEnd = async () => {
     if (!this.map) {
       return;
     }
@@ -83,11 +83,12 @@ class FindAddressContainer extends React.Component<any, IState> {
     const lat = newCenter.lat();
     const lng = newCenter.lng();
     console.log(lat, lng);
+    const reversedAddress = await reverseGeoCode(lat, lng);
     this.setState({
       lat,
       lng,
+      address: reversedAddress,
     });
-    reverseGeoCode(lat, lng);
   };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
