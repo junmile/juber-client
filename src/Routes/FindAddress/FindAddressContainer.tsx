@@ -97,10 +97,18 @@ class FindAddressContainer extends React.Component<any, IState> {
     } as any);
   };
 
-  public onInputBlur = () => {
+  public onInputBlur = async () => {
     const { address } = this.state;
-    const a = geoCode(address);
-    console.log(a);
+    const result = await geoCode(address);
+    if (result) {
+      const { formatted_address, lat, lng } = result;
+      this.setState({
+        address: formatted_address,
+        lat,
+        lng,
+      });
+      this.map.panTo({ lat, lng });
+    }
   };
   public reversGeocodeAddress = async (lat: number, lng: number) => {
     const reversedAddress = await reverseGeoCode(lat, lng);

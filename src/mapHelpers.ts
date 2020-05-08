@@ -8,8 +8,13 @@ export const geoCode = async (address: string) => {
   const { data } = await Axios(URL);
   if (!data.error_message) {
     const { results } = data;
-    const { location } = results[0].geometry;
-    return location;
+    const {
+      formatted_address,
+      geometry: {
+        location: { lat, lng },
+      },
+    } = results[0];
+    return { formatted_address, lat, lng };
   }
 };
 
@@ -19,6 +24,9 @@ export const reverseGeoCode = async (lat: number, lng: number) => {
   if (!data.error_message) {
     const { results } = data;
     const place = results[0];
+    if (!place) {
+      return false;
+    }
     const address = place.formatted_address;
     return address;
   } else {
