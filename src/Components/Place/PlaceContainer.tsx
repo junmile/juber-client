@@ -17,7 +17,6 @@ class FavMutation extends Mutation<editPlace, editPlaceVariables> {}
 class PlaceContainer extends React.Component<IProps> {
   public render() {
     const { fav, name, address, id } = this.props;
-    console.log(this.props);
     return (
       <FavMutation
         mutation={EDIT_PLACE}

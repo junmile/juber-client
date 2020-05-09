@@ -12,26 +12,30 @@ interface IState {
   name: string;
   lng: number;
   lat: number;
-  pickedAddress: boolean;
 }
 
 interface IProps extends RouteComponentProps<any> {}
 
-class AddPlaceQuery extends Mutation<addPlace, addPlaceVariables> {}
+class AddPlaceMutation extends Mutation<addPlace, addPlaceVariables> {}
 
 class AddPlaceContainer extends React.Component<IProps, IState> {
-  public state = {
-    address: '',
-    name: '',
-    lng: 0,
-    lat: 0,
-    pickedAddress: false,
-  };
+  //findAddress로부터 state값을 전달받음
+  constructor(props) {
+    super(props);
+    const { location: { state = {} } = {} } = props;
+    this.state = {
+      address: state.address || '',
+      name: '',
+      lat: state.lat || 0,
+      lng: state.lng || 0,
+    };
+  }
+
   public render() {
     const { address, name, lat, lng } = this.state;
     const { history } = this.props;
     return (
-      <AddPlaceQuery
+      <AddPlaceMutation
         mutation={ADD_PLACE}
         onCompleted={(data) => {
           const { AddPlace } = data;
@@ -57,7 +61,7 @@ class AddPlaceContainer extends React.Component<IProps, IState> {
             pickedAddress={lat !== 0 && lng !== 0}
           />
         )}
-      </AddPlaceQuery>
+      </AddPlaceMutation>
     );
   }
   public onInputChange = async (event) => {

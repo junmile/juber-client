@@ -89,8 +89,6 @@ class EditAccountContainer extends React.Component<IProps, IState> {
     const {
       target: { name, value, files },
     } = event;
-    console.log('돼?');
-    console.log(files);
     if (files) {
       this.setState({
         uploading: true,
@@ -106,7 +104,6 @@ class EditAccountContainer extends React.Component<IProps, IState> {
         'https://api.cloudinary.com/v1_1/dejkxwm5u/image/upload',
         formData
       );
-      console.log(secure_url);
       if (secure_url) {
         this.setState({ profilePhoto: secure_url, uploading: false });
       }

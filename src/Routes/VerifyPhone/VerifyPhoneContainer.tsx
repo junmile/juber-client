@@ -47,14 +47,12 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
               const { CompletePhoneVerification } = data;
               if (CompletePhoneVerification.ok) {
                 if (CompletePhoneVerification.token) {
-                  console.log(CompletePhoneVerification.token);
                   logUserIn({
                     variables: {
                       token: CompletePhoneVerification.token,
                     },
                   });
                 }
-                console.log(CompletePhoneVerification);
                 toast.success('확인되었습니다. 로그인하세요');
               } else {
                 toast.error(CompletePhoneVerification.error);
