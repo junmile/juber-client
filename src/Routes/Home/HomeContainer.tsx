@@ -6,11 +6,16 @@ import { Query } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
 import ward from '../../images/radio1.gif';
+import arrow from '../../images/arrow.gif';
+import { geoCode } from '../../mapHelpers';
 
 interface IState {
   isMenuOpen: boolean;
   lat: number;
   lng: number;
+  toAddress: string;
+  toLat: number;
+  toLng: number;
 }
 
 interface IProps extends RouteComponentProps<any> {
@@ -23,18 +28,22 @@ class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
   //@ts-ignore //맵을담을객체
   public map: google.maps.Map;
-  //@ts-ignore //마커오브젝트를 담을 객체
-  public userMarker: google.maps.Marker;
+  //@ts-ignore // my마커오브젝트를 담을 객체
+  public userMarker: google.maps.Marker | null = null;
+  //@ts-ignore // to마커오브젝트를 담을 객체
+  public toMarker: google.maps.Marker | null = null;
 
   public state = {
     isMenuOpen: false,
     lat: 0,
     lng: 0,
+    toAddress: '',
+    toLat: 0,
+    toLng: 0,
   };
 
   constructor(props) {
     super(props);
-    console.log('homeContainer.props : ', props);
     this.mapRef = React.createRef();
   }
 
@@ -47,7 +56,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { isMenuOpen } = this.state;
+    const { isMenuOpen, toAddress } = this.state;
     return (
       <ProfileQuery query={USER_PROFILE}>
         {({ loading }) => (
@@ -56,6 +65,9 @@ class HomeContainer extends React.Component<IProps, IState> {
             isMenuOpen={isMenuOpen}
             toggleMenu={this.toggleMenu}
             mapRef={this.mapRef}
+            toAddress={toAddress}
+            onInputChange={this.onInputChange}
+            onAddressSubmit={this.onAddressSubmit}
           />
         )}
       </ProfileQuery>
@@ -73,7 +85,6 @@ class HomeContainer extends React.Component<IProps, IState> {
     const {
       coords: { latitude, longitude },
     } = position;
-    console.log(latitude, longitude);
     // 들어온  position값으로 state를 set
     this.setState({
       lat: latitude,
@@ -87,7 +98,6 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { google } = this.props;
     const maps = google.maps;
     const mapNode = ReactDOM.findDOMNode(this.mapRef.current);
-    console.log(google, maps, mapNode);
     //맵생성
     const mapConfig: google.maps.MapOptions = {
       center: {
@@ -108,7 +118,7 @@ class HomeContainer extends React.Component<IProps, IState> {
       },
     };
     this.userMarker = new maps.Marker(userMarkerOptions);
-    this.userMarker.setMap(this.map);
+    if (this.userMarker) this.userMarker.setMap(this.map);
 
     const watchOptions: PositionOptions = {
       enableHighAccuracy: true,
@@ -123,7 +133,9 @@ class HomeContainer extends React.Component<IProps, IState> {
     const {
       coords: { latitude, longitude },
     } = position;
-    this.userMarker.setPosition({ lat: latitude, lng: longitude });
+    if (this.userMarker) {
+      this.userMarker.setPosition({ lat: latitude, lng: longitude });
+    }
     this.map.panTo({ lat: latitude, lng: longitude });
 
     return;
@@ -133,6 +145,52 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
   public handleGeoError = () => {
     console.log('No location');
+  };
+
+  public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { name, value },
+    } = event;
+    this.setState({
+      [name]: value,
+    } as any);
+  };
+
+  public onAddressSubmit = async () => {
+    const { toAddress } = this.state;
+    const { google } = this.props;
+    const maps = google.maps;
+    const result = await geoCode(toAddress);
+    if (result !== undefined) {
+      const { lat, lng, formatted_address: formattedAddress } = result;
+      this.setState({
+        toAddress: formattedAddress,
+        toLat: lat,
+        toLng: lng,
+      });
+      if (this.toMarker) {
+        this.toMarker.setMap(null);
+      }
+      const toMarkerOptions: google.maps.MarkerOptions = {
+        icon: {
+          url: arrow,
+          scaledSize: new google.maps.Size(25, 50),
+        },
+        position: {
+          lat,
+          lng,
+        },
+      };
+      this.toMarker = new maps.Marker(toMarkerOptions);
+      if (this.toMarker) {
+        this.toMarker.setMap(this.map);
+      }
+    } else {
+      //잘못된 검색으로 결과가 zero_result일때 input의 value를 지운다
+      this.setState({
+        toAddress: '',
+      });
+    }
   };
 }
 

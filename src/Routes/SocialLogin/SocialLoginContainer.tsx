@@ -69,7 +69,6 @@ class SocialLoginContainer extends React.Component<IProps, IState> {
   }
 
   public loginCallback = (response) => {
-    console.log(response);
     const { name, first_name, last_name, id, accessToken, email } = response;
     if (accessToken) {
       toast.success(`Welcome ${name}`);

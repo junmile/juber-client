@@ -8,13 +8,18 @@ export const geoCode = async (address: string) => {
   const { data } = await Axios(URL);
   if (!data.error_message) {
     const { results } = data;
-    const {
-      formatted_address,
-      geometry: {
-        location: { lat, lng },
-      },
-    } = results[0];
-    return { formatted_address, lat, lng };
+    if (results[0] !== undefined) {
+      const {
+        formatted_address,
+        geometry: {
+          location: { lat, lng },
+        },
+      } = results[0];
+      return { formatted_address, lat, lng };
+    } else {
+      toast.error('잘못된 주소를 입력하셨습니다.');
+      return;
+    }
   }
 };
 
