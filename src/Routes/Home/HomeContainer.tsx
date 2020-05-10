@@ -40,7 +40,7 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     //position을 관찰할 예정, geolocation을 통해 반환된 position값으로 this.handleGeoSuccess 실행
-    navigator.geolocation.watchPosition(
+    navigator.geolocation.getCurrentPosition(
       this.handleGeoSuccess,
       this.handleGeoError
     );
@@ -73,6 +73,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     const {
       coords: { latitude, longitude },
     } = position;
+    console.log(latitude, longitude);
     // 들어온  position값으로 state를 set
     this.setState({
       lat: latitude,
@@ -119,8 +120,12 @@ class HomeContainer extends React.Component<IProps, IState> {
     );
   };
   public handleGeoWatchSuccess = (position: Position) => {
-    console.log('위치한 좌표가 바뀌었습니다.');
-    console.log('포지션 : ', position);
+    const {
+      coords: { latitude, longitude },
+    } = position;
+    this.userMarker.setPosition({ lat: latitude, lng: longitude });
+    this.map.panTo({ lat: latitude, lng: longitude });
+
     return;
   };
   public handleGeoWatchError = () => {
