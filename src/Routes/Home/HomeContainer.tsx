@@ -5,8 +5,8 @@ import { userProfile } from '../../types/api';
 import { Query } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
-import ward from '../../images/radio1.gif';
-import arrow from '../../images/arrow.gif';
+import ward from '../../images/radio2.gif';
+import arrow from '../../images/arrow2.gif';
 import { geoCode } from '../../mapHelpers';
 
 interface IState {
@@ -32,6 +32,8 @@ class HomeContainer extends React.Component<IProps, IState> {
   public userMarker: google.maps.Marker | null = null;
   //@ts-ignore // to마커오브젝트를 담을 객체
   public toMarker: google.maps.Marker | null = null;
+  //@ts-ignore
+  public directions: google.maps.DirectionsRenderer;
 
   public state = {
     isMenuOpen: false,
@@ -163,11 +165,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     const result = await geoCode(toAddress);
     if (result !== undefined) {
       const { lat, lng, formatted_address: formattedAddress } = result;
-      this.setState({
-        toAddress: formattedAddress,
-        toLat: lat,
-        toLng: lng,
-      });
+
       if (this.toMarker) {
         this.toMarker.setMap(null);
       }
@@ -185,12 +183,38 @@ class HomeContainer extends React.Component<IProps, IState> {
       if (this.toMarker) {
         this.toMarker.setMap(this.map);
       }
+      const bounds = new maps.LatLngBounds();
+      bounds.extend({ lat, lng });
+      bounds.extend({ lat: this.state.lat, lng: this.state.lng });
+      this.map.fitBounds(bounds);
+      this.setState(
+        {
+          toAddress: formattedAddress,
+          toLat: lat,
+          toLng: lng,
+        },
+        this.createPath
+      );
     } else {
       //잘못된 검색으로 결과가 zero_result일때 input의 value를 지운다
       this.setState({
         toAddress: '',
       });
     }
+  };
+  public createPath = () => {
+    const { toLat, toLng, lat, lng } = this.state;
+    if (this.directions) {
+      this.directions.setMap(null);
+    }
+
+    const renderOptions: google.maps.DirectionsRendererOptions = {
+      polylineOptions: {
+        strokeColor: 'green',
+      },
+      suppressMarkers: true,
+    };
+    const directionService: google.maps.DirectionsService = new google.maps.DirectionsService();
   };
 }
 
