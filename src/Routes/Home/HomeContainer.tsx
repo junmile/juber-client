@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import ward from '../../images/radio2.gif';
 import arrow from '../../images/arrow2.gif';
 import { geoCode } from '../../mapHelpers';
+import { toast } from 'react-toastify';
 
 interface IState {
   isMenuOpen: boolean;
@@ -16,6 +17,10 @@ interface IState {
   toAddress: string;
   toLat: number;
   toLng: number;
+  distance: string;
+  duration?: string;
+  price?: string;
+  distanceValue: number;
 }
 
 interface IProps extends RouteComponentProps<any> {
@@ -39,9 +44,13 @@ class HomeContainer extends React.Component<IProps, IState> {
     isMenuOpen: false,
     lat: 0,
     lng: 0,
-    toAddress: '',
+    toAddress: '대한민국 서울특별시 마포구 상수동 와우산로 94',
     toLat: 0,
     toLng: 0,
+    distance: '',
+    durations: undefined,
+    price: '',
+    distanceValue: 0,
   };
 
   constructor(props) {
@@ -58,7 +67,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { isMenuOpen, toAddress } = this.state;
+    const { isMenuOpen, toAddress, price } = this.state;
     return (
       <ProfileQuery query={USER_PROFILE}>
         {({ loading }) => (
@@ -69,6 +78,7 @@ class HomeContainer extends React.Component<IProps, IState> {
             mapRef={this.mapRef}
             toAddress={toAddress}
             onInputChange={this.onInputChange}
+            price={price}
             onAddressSubmit={this.onAddressSubmit}
           />
         )}
@@ -204,6 +214,8 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
   public createPath = () => {
     const { toLat, toLng, lat, lng } = this.state;
+    console.log('lat, lng : ', lat, ',', lng);
+    console.log('toLat, toLng : ', toLat, ',', toLng);
     if (this.directions) {
       this.directions.setMap(null);
     }
@@ -214,7 +226,50 @@ class HomeContainer extends React.Component<IProps, IState> {
       },
       suppressMarkers: true,
     };
-    const directionService: google.maps.DirectionsService = new google.maps.DirectionsService();
+    this.directions = new google.maps.DirectionsRenderer(renderOptions);
+    const directionsService: google.maps.DirectionsService = new google.maps.DirectionsService();
+    const to = new google.maps.LatLng(toLat, toLng);
+    const from = new google.maps.LatLng(lat, lng);
+    const directionsOptions: google.maps.DirectionsRequest = {
+      destination: to,
+      origin: from,
+      travelMode: google.maps.TravelMode.TRANSIT,
+    };
+    directionsService.route(directionsOptions, this.handleRouteRequest);
+  };
+
+  public handleRouteRequest = (
+    result: google.maps.DirectionsResult,
+    status: google.maps.DirectionsStatus
+  ) => {
+    if (status === google.maps.DirectionsStatus.OK) {
+      const { routes } = result;
+      const {
+        distance: { text: distance, value: distanceValue },
+        duration: { text: duration },
+      } = routes[0].legs[0];
+      this.directions.setDirections(result);
+      this.directions.setMap(this.map);
+      this.setState({
+        distance,
+        distanceValue,
+        duration,
+        price: this.priceCal(distanceValue),
+      });
+    } else {
+      toast.error('해당 목적지까지 갈 수 있는 방법이 존재하지 않습니다.');
+      this.setState({
+        toAddress: '',
+      });
+    }
+  };
+
+  public priceCal = (distanceValue) => {
+    return distanceValue
+      ? Number.parseFloat((distanceValue * 1.14).toFixed(0))
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      : '0';
   };
 }
 
