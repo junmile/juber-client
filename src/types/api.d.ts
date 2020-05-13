@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface toggleDriving_ToggleDrivingMode {
-  __typename: "ToggleDrivingModeResponse";
+  __typename: 'ToggleDrivingModeResponse';
   ok: boolean;
   error: string | null;
 }
@@ -27,7 +27,7 @@ export interface toggleDriving {
 // ====================================================
 
 export interface editPlace_EditPlace {
-  __typename: "EditPlaceResponse";
+  __typename: 'EditPlaceResponse';
   ok: boolean;
   error: string | null;
 }
@@ -51,7 +51,7 @@ export interface editPlaceVariables {
 // ====================================================
 
 export interface addPlace_AddPlace {
-  __typename: "AddPlaceResponse";
+  __typename: 'AddPlaceResponse';
   ok: boolean;
   error: string | null;
 }
@@ -78,7 +78,7 @@ export interface addPlaceVariables {
 // ====================================================
 
 export interface updateProfile_UpdateMyProfile {
-  __typename: "UpdateMyProfileResponse";
+  __typename: 'UpdateMyProfileResponse';
   ok: boolean;
   error: string | null;
 }
@@ -100,11 +100,34 @@ export interface updateProfileVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: reportMovement
+// ====================================================
+
+export interface reportMovement_ReportMovement {
+  __typename: 'ReportMovementResponse';
+  ok: boolean;
+}
+
+export interface reportMovement {
+  ReportMovement: reportMovement_ReportMovement;
+}
+
+export interface reportMovementVariables {
+  lat: number;
+  lng: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: startPhoneVerification
 // ====================================================
 
 export interface startPhoneVerification_StartPhoneVerification {
-  __typename: "StartPhoneVerificationResponse";
+  __typename: 'StartPhoneVerificationResponse';
   ok: boolean;
   error: string | null;
 }
@@ -127,7 +150,7 @@ export interface startPhoneVerificationVariables {
 // ====================================================
 
 export interface facebookConnect_FacebookConnect {
-  __typename: "FacebookConnectResponse";
+  __typename: 'FacebookConnectResponse';
   ok: boolean;
   error: string | null;
   token: string | null;
@@ -154,7 +177,7 @@ export interface facebookConnectVariables {
 // ====================================================
 
 export interface verifyPhone_CompletePhoneVerification {
-  __typename: "CompletePhoneVerificationResponse";
+  __typename: 'CompletePhoneVerificationResponse';
   ok: boolean;
   error: string | null;
   token: string | null;
@@ -179,7 +202,7 @@ export interface verifyPhoneVariables {
 // ====================================================
 
 export interface userProfile_GetMyProfile_user {
-  __typename: "User";
+  __typename: 'User';
   profilePhoto: string | null;
   firstName: string;
   lastName: string;
@@ -189,7 +212,7 @@ export interface userProfile_GetMyProfile_user {
 }
 
 export interface userProfile_GetMyProfile {
-  __typename: "GetMyProfileResponse";
+  __typename: 'GetMyProfileResponse';
   ok: boolean;
   error: string | null;
   user: userProfile_GetMyProfile_user | null;
@@ -209,7 +232,7 @@ export interface userProfile {
 // ====================================================
 
 export interface getPlaces_GetMyPlaces_places {
-  __typename: "Place";
+  __typename: 'Place';
   id: number;
   name: string;
   address: string;
@@ -217,7 +240,7 @@ export interface getPlaces_GetMyPlaces_places {
 }
 
 export interface getPlaces_GetMyPlaces {
-  __typename: "GetMyPlacesResponse";
+  __typename: 'GetMyPlacesResponse';
   ok: boolean;
   error: string | null;
   places: (getPlaces_GetMyPlaces_places | null)[] | null;

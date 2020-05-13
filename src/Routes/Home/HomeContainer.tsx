@@ -2,13 +2,16 @@ import React from 'react';
 import HomePresenter from './HomePresenter';
 import { RouteComponentProps } from 'react-router-dom';
 import { userProfile } from '../../types/api';
-import { Query } from 'react-apollo';
+import { Query, graphql, MutationFn } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
 import ward from '../../images/radio2.gif';
 import arrow from '../../images/arrow2.gif';
 import { geoCode } from '../../mapHelpers';
 import { toast } from 'react-toastify';
+
+import { reportMovement, reportMovementVariables } from '../../types/api';
+import { REPORT_LOCATION } from './HomeQueries';
 
 interface IState {
   isMenuOpen: boolean;
@@ -25,6 +28,7 @@ interface IState {
 
 interface IProps extends RouteComponentProps<any> {
   google: any;
+  reportLocation: MutationFn;
 }
 
 class ProfileQuery extends Query<userProfile> {}
@@ -39,7 +43,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   public toMarker: google.maps.Marker | null = null;
   //@ts-ignore
   public directions: google.maps.DirectionsRenderer;
-
+  //state 설정
   public state = {
     isMenuOpen: false,
     lat: 0,
@@ -93,6 +97,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     });
   };
 
+  //geoLocation으로 반환받은 position
   public handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude },
@@ -133,15 +138,19 @@ class HomeContainer extends React.Component<IProps, IState> {
     if (this.userMarker) this.userMarker.setMap(this.map);
 
     const watchOptions: PositionOptions = {
+      //배터리를 더소모해서 좀더 높은 정확성을 갖는다
       enableHighAccuracy: true,
     };
+    //navigator.geolocation.watchPosition메소드는 (성공시 실행될 함수, 실패시 실행될 함수, PositionOptions의 타입을 갖는 Option을 인자로 갖는다)
     navigator.geolocation.watchPosition(
       this.handleGeoWatchSuccess,
       this.handleGeoWatchError,
       watchOptions
     );
   };
+  //watchPosition이 실행되었을때 (위치값이 이동된다면)
   public handleGeoWatchSuccess = (position: Position) => {
+    const { reportLocation } = this.props;
     const {
       coords: { latitude, longitude },
     } = position;
@@ -149,12 +158,19 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.userMarker.setPosition({ lat: latitude, lng: longitude });
     }
     this.map.panTo({ lat: latitude, lng: longitude });
-
+    reportLocation({
+      variables: {
+        lat: latitude,
+        lng: longitude,
+      },
+    });
     return;
   };
+
   public handleGeoWatchError = () => {
     console.log('Error watching you');
   };
+
   public handleGeoError = () => {
     console.log('No location');
   };
@@ -193,10 +209,12 @@ class HomeContainer extends React.Component<IProps, IState> {
       if (this.toMarker) {
         this.toMarker.setMap(this.map);
       }
+      //bounds객체를 생성
       const bounds = new maps.LatLngBounds();
       bounds.extend({ lat, lng });
       bounds.extend({ lat: this.state.lat, lng: this.state.lng });
       this.map.fitBounds(bounds);
+      console.log('실험 : ', lat, lng);
       this.setState(
         {
           toAddress: formattedAddress,
@@ -205,6 +223,8 @@ class HomeContainer extends React.Component<IProps, IState> {
         },
         this.createPath
       );
+
+      console.log('실험 2: ', lat, lng);
     } else {
       //잘못된 검색으로 결과가 zero_result일때 input의 value를 지운다
       this.setState({
@@ -212,6 +232,7 @@ class HomeContainer extends React.Component<IProps, IState> {
       });
     }
   };
+
   public createPath = () => {
     const { toLat, toLng, lat, lng } = this.state;
     console.log('lat, lng : ', lat, ',', lng);
@@ -273,4 +294,9 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
 }
 
-export default HomeContainer;
+export default graphql<any, reportMovement, reportMovementVariables>(
+  REPORT_LOCATION,
+  {
+    name: 'reportLocation',
+  }
+)(HomeContainer);
