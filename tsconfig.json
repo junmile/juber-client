@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "es6",
-      "dom",
-      "ESNext.AsyncIterable"
-    ],
+    "lib": ["es6", "dom", "ESNext.AsyncIterable"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,9 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "strictPropertyInitialization": false
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

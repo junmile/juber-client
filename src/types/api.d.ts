@@ -123,6 +123,32 @@ export interface reportMovementVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: getNearbyDrivers
+// ====================================================
+
+export interface getNearbyDrivers_GetNearbyDrivers_drivers {
+  __typename: 'User';
+  id: number;
+  lastLat: number;
+  lastLng: number;
+}
+
+export interface getNearbyDrivers_GetNearbyDrivers {
+  __typename: 'GetNearbyDriversResponse';
+  ok: boolean;
+  drivers: (getNearbyDrivers_GetNearbyDrivers_drivers | null)[] | null;
+}
+
+export interface getNearbyDrivers {
+  GetNearbyDrivers: getNearbyDrivers_GetNearbyDrivers;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: startPhoneVerification
 // ====================================================
 

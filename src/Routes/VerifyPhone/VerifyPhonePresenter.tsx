@@ -11,7 +11,7 @@ import { verifyPhone, verifyPhoneVariables } from '../../types/api';
 const Container = styled.div``;
 
 const ExtendedForm = styled(Form)`
-  padding: 0px 40px;
+  padding: 40px;
 `;
 
 const ExtendedInput = styled(Input)`

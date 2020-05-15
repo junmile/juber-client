@@ -1,7 +1,7 @@
 import React from 'react';
 import HomePresenter from './HomePresenter';
 import { RouteComponentProps } from 'react-router-dom';
-import { userProfile } from '../../types/api';
+import { userProfile, getNearbyDrivers } from '../../types/api';
 import { Query, graphql, MutationFn } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
@@ -11,7 +11,7 @@ import { geoCode } from '../../mapHelpers';
 import { toast } from 'react-toastify';
 
 import { reportMovement, reportMovementVariables } from '../../types/api';
-import { REPORT_LOCATION } from './HomeQueries';
+import { REPORT_LOCATION, GET_NEARBY_DRIVERS } from './HomeQueries';
 
 interface IState {
   isMenuOpen: boolean;
@@ -32,17 +32,18 @@ interface IProps extends RouteComponentProps<any> {
 }
 
 class ProfileQuery extends Query<userProfile> {}
+class NearbyQuery extends Query<getNearbyDrivers> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
-  //@ts-ignore //맵을담을객체
+  //맵을담을객체
   public map: google.maps.Map;
-  //@ts-ignore // my마커오브젝트를 담을 객체
+  // my마커오브젝트를 담을 객체
   public userMarker: google.maps.Marker | null = null;
-  //@ts-ignore // to마커오브젝트를 담을 객체
+  // to마커오브젝트를 담을 객체
   public toMarker: google.maps.Marker | null = null;
-  //@ts-ignore
   public directions: google.maps.DirectionsRenderer;
+  public drivers: google.maps.Marker[];
   //state 설정
   public state = {
     isMenuOpen: false,
@@ -60,6 +61,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   constructor(props) {
     super(props);
     this.mapRef = React.createRef();
+    this.drivers = [];
   }
 
   public componentDidMount() {
@@ -74,17 +76,32 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { isMenuOpen, toAddress, price } = this.state;
     return (
       <ProfileQuery query={USER_PROFILE}>
-        {({ loading }) => (
-          <HomePresenter
-            loading={loading}
-            isMenuOpen={isMenuOpen}
-            toggleMenu={this.toggleMenu}
-            mapRef={this.mapRef}
-            toAddress={toAddress}
-            onInputChange={this.onInputChange}
-            price={price}
-            onAddressSubmit={this.onAddressSubmit}
-          />
+        {({ data, loading }) => (
+          <NearbyQuery
+            query={GET_NEARBY_DRIVERS}
+            skip={
+              (data &&
+                data.GetMyProfile &&
+                data.GetMyProfile.user &&
+                data.GetMyProfile.user.isDriving) ||
+              false
+            }
+            onCompleted={this.handleNearbyDrivers}
+          >
+            {() => (
+              <HomePresenter
+                loading={loading}
+                isMenuOpen={isMenuOpen}
+                toggleMenu={this.toggleMenu}
+                mapRef={this.mapRef}
+                toAddress={toAddress}
+                onInputChange={this.onInputChange}
+                price={price}
+                data={data}
+                onAddressSubmit={this.onAddressSubmit}
+              />
+            )}
+          </NearbyQuery>
         )}
       </ProfileQuery>
     );
@@ -115,7 +132,12 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { google } = this.props;
     const maps = google.maps;
     const mapNode = ReactDOM.findDOMNode(this.mapRef.current);
+    if (!mapNode) {
+      this.loadMap(lat, lng);
+      return;
+    }
     //맵생성
+
     const mapConfig: google.maps.MapOptions = {
       center: {
         lat,
@@ -214,7 +236,6 @@ class HomeContainer extends React.Component<IProps, IState> {
       bounds.extend({ lat, lng });
       bounds.extend({ lat: this.state.lat, lng: this.state.lng });
       this.map.fitBounds(bounds);
-      console.log('실험 : ', lat, lng);
       this.setState(
         {
           toAddress: formattedAddress,
@@ -223,8 +244,6 @@ class HomeContainer extends React.Component<IProps, IState> {
         },
         this.createPath
       );
-
-      console.log('실험 2: ', lat, lng);
     } else {
       //잘못된 검색으로 결과가 zero_result일때 input의 value를 지운다
       this.setState({
@@ -291,6 +310,37 @@ class HomeContainer extends React.Component<IProps, IState> {
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       : '0';
+  };
+  public handleNearbyDrivers = (data: {} | getNearbyDrivers) => {
+    console.log('소환');
+    if ('GetNearbyDrivers' in data) {
+      const {
+        GetNearbyDrivers: { drivers, ok },
+      } = data;
+      if (ok && drivers) {
+        for (const driver of drivers) {
+          console.log('드라이버: ', driver);
+          if (driver) {
+            const markerOptions: google.maps.MarkerOptions = {
+              position: {
+                lat: driver.lastLat,
+                lng: driver.lastLng,
+              },
+              icon: {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                scale: 5,
+              },
+            };
+            const newMarker: google.maps.Marker = new google.maps.Marker(
+              markerOptions
+            );
+            newMarker.set('ID', driver.id);
+            newMarker.setMap(this.map);
+            this.drivers.push(newMarker);
+          }
+        }
+      }
+    }
   };
 }
 
