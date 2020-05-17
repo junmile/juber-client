@@ -5,6 +5,7 @@ import { userProfile, getNearbyDrivers } from '../../types/api';
 import { Query, graphql, MutationFn } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
+import carIcon from '../../images/car.png';
 import ward from '../../images/radio2.gif';
 import arrow from '../../images/arrow2.gif';
 import { geoCode } from '../../mapHelpers';
@@ -79,6 +80,7 @@ class HomeContainer extends React.Component<IProps, IState> {
         {({ data, loading }) => (
           <NearbyQuery
             query={GET_NEARBY_DRIVERS}
+            pollInterval={1000}
             skip={
               (data &&
                 data.GetMyProfile &&
@@ -312,31 +314,49 @@ class HomeContainer extends React.Component<IProps, IState> {
       : '0';
   };
   public handleNearbyDrivers = (data: {} | getNearbyDrivers) => {
-    console.log('소환');
     if ('GetNearbyDrivers' in data) {
       const {
         GetNearbyDrivers: { drivers, ok },
       } = data;
       if (ok && drivers) {
         for (const driver of drivers) {
-          console.log('드라이버: ', driver);
-          if (driver) {
-            const markerOptions: google.maps.MarkerOptions = {
-              position: {
+          if (driver && driver.lastLat && driver.lastLng) {
+            console.log('드라이버의 아이디 : ', driver.id);
+            //마커가 existingDriver의 요구조건을 충족시키는(drivers의 각 ID가 markerId와 같은 drivers의 엘리먼트인지 )
+            //새로운출현(아이디가 다르다면 마커를 추가해야하므로)
+            const exisitingDriver:
+              | google.maps.Marker
+              | undefined = this.drivers.find(
+              (driverMarker: google.maps.Marker) => {
+                const markerID = driverMarker.get('ID');
+                return markerID === driver.id;
+              }
+            );
+            //마커아이디가 드라이버의 아이디와 같다면(맵에 이미 뿌려진 마커라면)
+            if (exisitingDriver) {
+              exisitingDriver.setPosition({
                 lat: driver.lastLat,
                 lng: driver.lastLng,
-              },
-              icon: {
-                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                scale: 5,
-              },
-            };
-            const newMarker: google.maps.Marker = new google.maps.Marker(
-              markerOptions
-            );
-            newMarker.set('ID', driver.id);
-            newMarker.setMap(this.map);
-            this.drivers.push(newMarker);
+              });
+              exisitingDriver.setMap(this.map);
+            } else {
+              const markerOptions: google.maps.MarkerOptions = {
+                position: {
+                  lat: driver.lastLat,
+                  lng: driver.lastLng,
+                },
+                icon: {
+                  url: carIcon,
+                  scaledSize: new google.maps.Size(30, 30),
+                },
+              };
+              const newMarker: google.maps.Marker = new google.maps.Marker(
+                markerOptions
+              );
+              newMarker.set('ID', driver.id);
+              newMarker.setMap(this.map);
+              this.drivers.push(newMarker);
+            }
           }
         }
       }
