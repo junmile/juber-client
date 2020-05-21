@@ -5,11 +5,9 @@ const Container = styled.div``;
 
 const Image = styled.label`
   cursor: pointer;
-  height: 80px;
-  width: 80px;
-  border: 2px solid black;
+  height: 200px;
+  width: 100%;
   display: block;
-  border-radius: 50%;
   margin-bottom: 35px;
   display: flex;
   align-items: center;
@@ -17,8 +15,11 @@ const Image = styled.label`
   font-size: 28px;
   overflow: hidden;
   & img {
-    width: 80px;
-    height: 80px;
+    border-radius: 100px;
+    text-align: center;
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
   }
 `;
 
@@ -39,7 +40,7 @@ interface IProps {
 const PhotoInput: React.SFC<IProps> = ({ uploading, fileUrl, onChange }) => (
   <Container>
     <Input id={'photo'} type="file" accept="image/*" onChange={onChange} />
-    <Image htmlFor="photo">
+    <Image htmlFor="photo" id="ddd">
       {uploading && '⏰'}
       {!uploading && <img alt="" src={fileUrl} />}
     </Image>

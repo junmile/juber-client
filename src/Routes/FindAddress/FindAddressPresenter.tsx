@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import styled from '../../typed-components';
 import AddressBar from '../../Components/App/AddressBar';
 import Button from '../../Components/Button';
+import arrow from '../../images/arrow.gif';
 
 const Map = styled.div`
   position: absolute;
@@ -14,23 +15,29 @@ const Map = styled.div`
 `;
 const Center = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
   width: 100%;
   z-index: 2;
   display: flex;
   justify-content: center;
-  width: 30px;
-  height: 30px;
   align-content: center;
   justify-content: center;
   font-size: 30px;
   margin: auto;
+`;
+
+const Arrow = styled.img`
+  position: absolute;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+  justify-content: center;
   top: 0;
-  bottom: 0;
+  bottom: 40px;
   left: 0;
   right: 0;
+  height: 80px;
+  width: 40px;
 `;
 
 const ExtendedButton = styled(Button)`
@@ -45,6 +52,7 @@ const ExtendedButton = styled(Button)`
 `;
 
 interface IProps {
+  enter: any;
   mapRef: any;
   address: string;
   onInputBlur: () => void;
@@ -60,6 +68,7 @@ class FindAddressPresenter extends React.Component<IProps> {
       onInputChange,
       address,
       onPickPlace,
+      enter,
     } = this.props;
     return (
       <div>
@@ -67,13 +76,16 @@ class FindAddressPresenter extends React.Component<IProps> {
           <title>Find Address | Juber</title>
         </Helmet>
         <AddressBar
+          enter={enter}
           name={'address'}
           value={address}
           onBlur={onInputBlur}
           onChange={onInputChange}
         />
         <ExtendedButton value={'Pick this place'} onClick={onPickPlace} />
-        <Center>📍</Center>
+        <Center>
+          <Arrow src={arrow}></Arrow>
+        </Center>
         <Map ref={mapRef} />
       </div>
     );

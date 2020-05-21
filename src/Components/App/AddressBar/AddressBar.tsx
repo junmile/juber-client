@@ -23,11 +23,19 @@ interface IProps {
   value: string;
   onBlur: any;
   name: string;
+  enter: any;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const AddressBar: React.SFC<IProps> = ({ value, onBlur, onChange, name }) => (
+const AddressBar: React.SFC<IProps> = ({
+  value,
+  onBlur,
+  onChange,
+  name,
+  enter,
+}) => (
   <Container
+    onKeyDown={enter}
     value={value}
     onBlur={onBlur}
     onChange={onChange}

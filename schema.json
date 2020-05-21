@@ -616,13 +616,9 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1486,13 +1482,9 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Ride",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Ride",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

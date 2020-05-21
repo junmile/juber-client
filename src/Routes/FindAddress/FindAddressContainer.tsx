@@ -44,6 +44,7 @@ class FindAddressContainer extends React.Component<IProps, IState> {
     const { address } = this.state;
     return (
       <FindAddressPresenter
+        enter={this.enter}
         mapRef={this.mapRef}
         address={address}
         onInputChange={this.onInputChange}
@@ -136,6 +137,12 @@ class FindAddressContainer extends React.Component<IProps, IState> {
         lng,
       },
     });
+  };
+
+  public enter = (event) => {
+    if (event.keyCode === 'enter') {
+      this.onPickPlace();
+    }
   };
 }
 

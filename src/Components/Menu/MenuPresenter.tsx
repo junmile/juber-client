@@ -30,6 +30,7 @@ const Image = styled.img`
   background-color: grey;
   border-radius: 40px;
   overflow: hidden;
+  object-fit: cover;
 `;
 
 const Name = styled.h2`

@@ -1,18 +1,32 @@
 import React from 'react';
 import HomePresenter from './HomePresenter';
 import { RouteComponentProps } from 'react-router-dom';
-import { userProfile, getNearbyDrivers } from '../../types/api';
-import { Query, graphql, MutationFn } from 'react-apollo';
+import {
+  userProfile,
+  getNearbyDrivers,
+  requestRide,
+  requestRideVariables,
+  getNearbyRides,
+  acceptRideVariables,
+  acceptRide,
+} from '../../types/api';
+import { Query, graphql, MutationFn, Mutation } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
 import carIcon from '../../images/car.png';
 import ward from '../../images/radio2.gif';
 import arrow from '../../images/arrow2.gif';
-import { geoCode } from '../../mapHelpers';
+import { geoCode, reverseGeoCode } from '../../mapHelpers';
 import { toast } from 'react-toastify';
 
 import { reportMovement, reportMovementVariables } from '../../types/api';
-import { REPORT_LOCATION, GET_NEARBY_DRIVERS } from './HomeQueries';
+import {
+  REPORT_LOCATION,
+  GET_NEARBY_DRIVERS,
+  REQUEST_RIDE,
+  GET_NEARBY_RIDE,
+  ACCEPT_RIDE,
+} from './HomeQueries';
 
 interface IState {
   isMenuOpen: boolean;
@@ -23,8 +37,10 @@ interface IState {
   toLng: number;
   distance: string;
   duration?: string;
-  price?: string;
+  price?: number;
   distanceValue: number;
+  fromAddress: string;
+  isDriving: boolean;
 }
 
 interface IProps extends RouteComponentProps<any> {
@@ -34,6 +50,9 @@ interface IProps extends RouteComponentProps<any> {
 
 class ProfileQuery extends Query<userProfile> {}
 class NearbyQuery extends Query<getNearbyDrivers> {}
+class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
+class GetNearbyRidesQuery extends Query<getNearbyRides> {}
+class AcceptRide extends Mutation<acceptRide, acceptRideVariables> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -47,6 +66,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   public drivers: google.maps.Marker[];
   //state 설정
   public state = {
+    fromAddress: '',
     isMenuOpen: false,
     lat: 0,
     lng: 0,
@@ -54,9 +74,10 @@ class HomeContainer extends React.Component<IProps, IState> {
     toLat: 0,
     toLng: 0,
     distance: '',
-    durations: undefined,
-    price: '',
+    duration: undefined,
+    price: 0,
     distanceValue: 0,
+    isDriving: false,
   };
 
   constructor(props) {
@@ -74,34 +95,72 @@ class HomeContainer extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { isMenuOpen, toAddress, price } = this.state;
+    const {
+      isMenuOpen,
+      toAddress,
+      distance,
+      fromAddress,
+      lat,
+      lng,
+      toLat,
+      toLng,
+      price,
+      duration,
+      isDriving,
+    } = this.state;
     return (
-      <ProfileQuery query={USER_PROFILE}>
+      <ProfileQuery query={USER_PROFILE} onCompleted={this.handleProfileQuery}>
         {({ data, loading }) => (
           <NearbyQuery
             query={GET_NEARBY_DRIVERS}
-            pollInterval={1000}
-            skip={
-              (data &&
-                data.GetMyProfile &&
-                data.GetMyProfile.user &&
-                data.GetMyProfile.user.isDriving) ||
-              false
-            }
+            pollInterval={5000}
+            skip={isDriving}
             onCompleted={this.handleNearbyDrivers}
           >
             {() => (
-              <HomePresenter
-                loading={loading}
-                isMenuOpen={isMenuOpen}
-                toggleMenu={this.toggleMenu}
-                mapRef={this.mapRef}
-                toAddress={toAddress}
-                onInputChange={this.onInputChange}
-                price={price}
-                data={data}
-                onAddressSubmit={this.onAddressSubmit}
-              />
+              <RequestRideMutation
+                mutation={REQUEST_RIDE}
+                onCompleted={this.handleRideRequest}
+                variables={{
+                  distance,
+                  pickUpAddress: fromAddress,
+                  pickUpLat: lat,
+                  pickUpLng: lng,
+                  dropOffLat: toLat,
+                  dropOffLng: toLng,
+                  dropOffAddress: toAddress,
+                  price: price || 0,
+                  duration: duration || '',
+                }}
+              >
+                {(requestRideFn) => (
+                  <GetNearbyRidesQuery
+                    query={GET_NEARBY_RIDE}
+                    skip={!isDriving}
+                  >
+                    {({ data: getNearbyRide }) => (
+                      <AcceptRide mutation={ACCEPT_RIDE}>
+                        {(acceptRideFn) => (
+                          <HomePresenter
+                            isMenuOpen={isMenuOpen}
+                            toggleMenu={this.toggleMenu}
+                            mapRef={this.mapRef}
+                            toAddress={toAddress}
+                            onInputChange={this.onInputChange}
+                            price={price}
+                            data={data}
+                            onAddressSubmit={this.onAddressSubmit}
+                            requestRideFn={requestRideFn}
+                            getNearbyRide={getNearbyRide}
+                            acceptRideFn={acceptRideFn}
+                            enter={this.enter}
+                          />
+                        )}
+                      </AcceptRide>
+                    )}
+                  </GetNearbyRidesQuery>
+                )}
+              </RequestRideMutation>
             )}
           </NearbyQuery>
         )}
@@ -126,7 +185,18 @@ class HomeContainer extends React.Component<IProps, IState> {
       lat: latitude,
       lng: longitude,
     });
+    this.getFromAddress(latitude, longitude);
     this.loadMap(latitude, longitude);
+  };
+
+  public getFromAddress = async (lat: number, lng: number) => {
+    const address = await reverseGeoCode(lat, lng);
+    console.log(address);
+    if (address) {
+      this.setState({
+        fromAddress: address,
+      });
+    }
   };
 
   public loadMap = (lat, lng) => {
@@ -307,12 +377,13 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
 
   public priceCal = (distanceValue) => {
-    return distanceValue
-      ? Number.parseFloat((distanceValue * 1.14).toFixed(0))
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      : '0';
+    return Number.parseFloat((distanceValue * 1.14).toFixed(0));
   };
+
+  public priceCalComma = (price) => {
+    return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0';
+  };
+
   public handleNearbyDrivers = (data: {} | getNearbyDrivers) => {
     if ('GetNearbyDrivers' in data) {
       const {
@@ -360,6 +431,31 @@ class HomeContainer extends React.Component<IProps, IState> {
           }
         }
       }
+    }
+  };
+
+  public handleRideRequest = (data: requestRide) => {
+    const { RequestRide } = data;
+    if (RequestRide) {
+      toast.success('요청이 완료되었습니다. 운전자를 찾고있습니다.');
+    }
+  };
+  public handleProfileQuery = (data: userProfile) => {
+    const { GetMyProfile } = data;
+    if (GetMyProfile.user) {
+      const {
+        user: { isDriving },
+      } = GetMyProfile;
+      if (isDriving) {
+        this.setState({
+          isDriving,
+        });
+      }
+    }
+  };
+  public enter = (event) => {
+    if (event.keyCode === 13) {
+      this.onAddressSubmit();
     }
   };
 }

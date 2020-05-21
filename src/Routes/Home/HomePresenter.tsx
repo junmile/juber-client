@@ -5,7 +5,16 @@ import Menu from '../../Components/Menu';
 import styled from '../../typed-components';
 import Button from '../../Components/Button';
 import AddressBar from '../../Components/App/AddressBar';
-import { userProfile } from '../../types/api';
+import {
+  userProfile,
+  requestRide,
+  requestRideVariables,
+  getNearbyRides,
+  acceptRide,
+  acceptRideVariables,
+} from '../../types/api';
+import { MutationFn } from 'react-apollo';
+import RidePopUp from '../../Components/RidePopUp';
 
 const Container = styled.div``;
 
@@ -48,25 +57,31 @@ const Map = styled.div`
 interface IProps {
   isMenuOpen: boolean;
   toggleMenu: () => void;
-  loading: boolean;
   mapRef: any;
   toAddress: string;
   onInputChange: any;
   onAddressSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  price?: string;
+  price?: number;
   data?: userProfile;
+  requestRideFn?: MutationFn<requestRide, requestRideVariables>;
+  getNearbyRide?: getNearbyRides | any;
+  acceptRideFn: MutationFn<acceptRide, acceptRideVariables> | any;
+  enter: any;
 }
 
 const HomePresenter: React.SFC<IProps> = ({
   isMenuOpen,
   toggleMenu,
-  loading,
   mapRef,
   toAddress,
   onInputChange,
   onAddressSubmit,
   price,
+  enter,
+  acceptRideFn,
   data: { GetMyProfile: { user = null } = {} } = {},
+  requestRideFn,
+  getNearbyRide: { GetNearbyRides: { ride = null } = {} } = {},
 }) => (
   <Container>
     <Helmet>
@@ -84,7 +99,7 @@ const HomePresenter: React.SFC<IProps> = ({
         },
       }}
     >
-      {!loading && <MenuButton onClick={toggleMenu}>|||</MenuButton>}
+      {<MenuButton onClick={toggleMenu}>|||</MenuButton>}
       {user && !user.isDriving && (
         <React.Fragment>
           <AddressBar
@@ -92,6 +107,7 @@ const HomePresenter: React.SFC<IProps> = ({
             onChange={onInputChange}
             value={toAddress}
             onBlur={null}
+            enter={enter}
           />
           <ExtendedButton
             onClick={onAddressSubmit}
@@ -100,11 +116,24 @@ const HomePresenter: React.SFC<IProps> = ({
           />
         </React.Fragment>
       )}
-      {price && (
+      {price !== 0 && (
         <RequestButton
-          onClick={onAddressSubmit}
+          onClick={requestRideFn}
           disabled={toAddress === ''}
           value={`Request Ride (${price}원)`}
+        />
+      )}
+      {ride && (
+        <RidePopUp
+          id={ride.id}
+          pickUpAddress={ride.pickUpAddress}
+          dropOffAddress={ride.dropOffAddress}
+          price={ride.price}
+          distance={ride.distance}
+          duration={ride.duration}
+          passengerName={ride.passenger.fullName}
+          passengerPhoto={ride.passenger.profilePhoto}
+          acceptRideFn={acceptRideFn}
         />
       )}
       <Map ref={mapRef} />
