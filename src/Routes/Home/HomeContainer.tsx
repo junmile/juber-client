@@ -169,7 +169,10 @@ class HomeContainer extends React.Component<IProps, IState> {
                         subscribeToMore(rideSubscriptionOptions);
                       }
                       return (
-                        <AcceptRide mutation={ACCEPT_RIDE}>
+                        <AcceptRide
+                          mutation={ACCEPT_RIDE}
+                          onCompleted={this.handleRideAcceptance}
+                        >
                           {(acceptRideFn) => (
                             <HomePresenter
                               isMenuOpen={isMenuOpen}
@@ -466,9 +469,12 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
 
   public handleRideRequest = (data: requestRide) => {
+    const { history } = this.props;
     const { RequestRide } = data;
     if (RequestRide) {
       toast.success('요청이 완료되었습니다. 운전자를 찾고있습니다.');
+      console.log(history);
+      history.push(`/ride/${RequestRide.ride!.id}`);
     }
   };
   public handleProfileQuery = (data: userProfile) => {
@@ -492,6 +498,14 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public handleSubscriptionUpdate = (data) => {
     console.log(data);
+  };
+
+  public handleRideAcceptance = (data: acceptRide) => {
+    const { history } = this.props;
+    const { UpdateRideStatus } = data;
+    if (UpdateRideStatus) {
+      history.push(`/ride/${UpdateRideStatus.rideId}`);
+    }
   };
 }
 
