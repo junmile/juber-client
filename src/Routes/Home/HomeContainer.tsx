@@ -141,14 +141,33 @@ class HomeContainer extends React.Component<IProps, IState> {
                     skip={!isDriving}
                   >
                     {({ subscribeToMore, data: getNearbyRide }) => {
+                      //subscribe할 옵션설정
                       const rideSubscriptionOptions: SubscribeToMoreOptions = {
+                        // document에는 subcription에 해당하는 쿼리
                         document: SUBSCRIBE_NEARBY_RIDES,
-                        updateQuery: async (prev, result) => {
-                          console.log('프리뷰 : ', prev);
-                          console.log('콘솔 : ', result);
+                        // updateQuery에는 기존의 쿼리(prev) 로부터 result 결과를 얻음
+                        updateQuery: (prev, { subscriptionData }) => {
+                          //subscriptionData.data가 존재하지 않을때 기존의 prev객체를 리턴한다(getNearbyRide)
+                          if (!subscriptionData.data) {
+                            return prev;
+                          }
+                          //아닐경우 prev와 같은 형태의 구조로 리턴을 해주어야함
+                          //Object.assign 은 맨앞의 파라메터에 차순의 파라메터의 값을 병합한다
+                          //빈 파라메터에 prev의 파라메터를 병합하고
+                          //prev의 파라메터에 GetNearbyRides에 ...prev.GetNearbyRides 값을 병함하고 GetNearbyRides의 ride값에는 subscriptionData.data.nearbyRideSubscription값을 병함한다
+                          const newObject = Object.assign({}, prev, {
+                            GetNearbyRides: {
+                              ...prev.GetNearbyRides,
+                              ride:
+                                subscriptionData.data.NearbyRideSubscription,
+                            },
+                          });
+                          return newObject;
                         },
                       };
-                      subscribeToMore(rideSubscriptionOptions);
+                      if (isDriving) {
+                        subscribeToMore(rideSubscriptionOptions);
+                      }
                       return (
                         <AcceptRide mutation={ACCEPT_RIDE}>
                           {(acceptRideFn) => (
