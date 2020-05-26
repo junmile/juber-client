@@ -20,6 +20,7 @@ const Container = styled.input`
 `;
 
 interface IProps {
+  readOnly: boolean;
   value: string;
   onBlur: any;
   name: string;
@@ -33,8 +34,10 @@ const AddressBar: React.SFC<IProps> = ({
   onChange,
   name,
   enter,
+  readOnly,
 }) => (
   <Container
+    readOnly={readOnly}
     onKeyDown={enter}
     value={value}
     onBlur={onBlur}

@@ -277,6 +277,25 @@ export interface nearbyRides {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: getRidebyId
+// ====================================================
+
+export interface getRidebyId_GetRidebyId {
+  __typename: "GetRidebyIdResponse";
+  ok: boolean;
+  error: string | null;
+}
+
+export interface getRidebyId {
+  GetRidebyId: getRidebyId_GetRidebyId;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: startPhoneVerification
 // ====================================================
 

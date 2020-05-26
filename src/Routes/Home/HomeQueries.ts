@@ -100,3 +100,12 @@ export const SUBSCRIBE_NEARBY_RIDES = gql`
     }
   }
 `;
+
+export const GET_RIDE_BY_ID = gql`
+  query getRidebyId {
+    GetRidebyId {
+      ok
+      error
+    }
+  }
+`;

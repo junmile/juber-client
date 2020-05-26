@@ -9,6 +9,7 @@ import {
   getNearbyRides,
   acceptRideVariables,
   acceptRide,
+  getRidebyId,
 } from '../../types/api';
 import { Query, graphql, MutationFn, Mutation } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
@@ -27,10 +28,12 @@ import {
   REQUEST_RIDE,
   GET_NEARBY_RIDE,
   ACCEPT_RIDE,
+  GET_RIDE_BY_ID,
 } from './HomeQueries';
 import { SubscribeToMoreOptions } from 'apollo-boost';
 
 interface IState {
+  requested: boolean;
   isMenuOpen: boolean;
   lat: number;
   lng: number;
@@ -55,6 +58,7 @@ class NearbyQuery extends Query<getNearbyDrivers> {}
 class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
 class GetNearbyRidesQuery extends Query<getNearbyRides> {}
 class AcceptRide extends Mutation<acceptRide, acceptRideVariables> {}
+class GetRidebyIdQuery extends Query<getRidebyId> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -68,6 +72,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   public drivers: google.maps.Marker[];
   //state 설정
   public state = {
+    requested: false,
     fromAddress: '',
     isMenuOpen: false,
     lat: 0,
@@ -98,6 +103,7 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public render() {
     const {
+      requested,
       isMenuOpen,
       toAddress,
       distance,
@@ -169,27 +175,38 @@ class HomeContainer extends React.Component<IProps, IState> {
                         subscribeToMore(rideSubscriptionOptions);
                       }
                       return (
-                        <AcceptRide
-                          mutation={ACCEPT_RIDE}
-                          onCompleted={this.handleRideAcceptance}
-                        >
-                          {(acceptRideFn) => (
-                            <HomePresenter
-                              isMenuOpen={isMenuOpen}
-                              toggleMenu={this.toggleMenu}
-                              mapRef={this.mapRef}
-                              toAddress={toAddress}
-                              onInputChange={this.onInputChange}
-                              price={price}
-                              data={data}
-                              onAddressSubmit={this.onAddressSubmit}
-                              requestRideFn={requestRideFn}
-                              getNearbyRide={getNearbyRide}
-                              acceptRideFn={acceptRideFn}
-                              enter={this.enter}
-                            />
-                          )}
-                        </AcceptRide>
+                        <GetRidebyIdQuery query={GET_RIDE_BY_ID}>
+                          {({ data: getRidebyIdQuery }) => {
+                            console.log('리퀘스티드 : ', requested);
+                            console.log('데이터 : ', getRidebyIdQuery);
+                            return (
+                              <AcceptRide
+                                mutation={ACCEPT_RIDE}
+                                refetchQueries={[{ query: GET_RIDE_BY_ID }]}
+                                onCompleted={this.handleRideAcceptance}
+                              >
+                                {(acceptRideFn) => (
+                                  <HomePresenter
+                                    requested={requested}
+                                    isMenuOpen={isMenuOpen}
+                                    toggleMenu={this.toggleMenu}
+                                    mapRef={this.mapRef}
+                                    toAddress={toAddress}
+                                    onInputChange={this.onInputChange}
+                                    price={price}
+                                    data={data}
+                                    onAddressSubmit={this.onAddressSubmit}
+                                    requestRideFn={requestRideFn}
+                                    getNearbyRide={getNearbyRide}
+                                    acceptRideFn={acceptRideFn}
+                                    enter={this.enter}
+                                    getRidebyIdQuery={getRidebyIdQuery}
+                                  />
+                                )}
+                              </AcceptRide>
+                            );
+                          }}
+                        </GetRidebyIdQuery>
                       );
                     }}
                   </GetNearbyRidesQuery>
@@ -360,8 +377,6 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public createPath = () => {
     const { toLat, toLng, lat, lng } = this.state;
-    console.log('lat, lng : ', lat, ',', lng);
-    console.log('toLat, toLng : ', toLat, ',', toLng);
     if (this.directions) {
       this.directions.setMap(null);
     }
@@ -473,8 +488,8 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { RequestRide } = data;
     if (RequestRide) {
       toast.success('요청이 완료되었습니다. 운전자를 찾고있습니다.');
-      console.log(history);
-      history.push(`/ride/${RequestRide.ride!.id}`);
+      this.setState({ requested: true });
+      history.push('/');
     }
   };
   public handleProfileQuery = (data: userProfile) => {

@@ -68,8 +68,8 @@ const RidePresenter: React.SFC<IProps> = ({
           <React.Fragment>
             <Title>Driver</Title>
             <Passenger>
-              <Img src={ride.driver.profilePhoto!} />
-              <Data>{ride.driver.fullName!}</Data>
+              <Img src={ride.driver.profilePhoto} />
+              <Data>{ride.driver.fullName}</Data>
             </Passenger>
           </React.Fragment>
         )}
