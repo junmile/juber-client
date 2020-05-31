@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 
 import { reportMovement, reportMovementVariables } from '../../types/api';
 import {
+  RIDE_SUBSCRIPTION_HOME,
   SUBSCRIBE_NEARBY_RIDES,
   REPORT_LOCATION,
   GET_NEARBY_DRIVERS,
@@ -147,6 +148,7 @@ class HomeContainer extends React.Component<IProps, IState> {
                     skip={!isDriving}
                   >
                     {({ subscribeToMore, data: getNearbyRide }) => {
+                      console.log('라이드 : ', getNearbyRide);
                       //subscribe할 옵션설정
                       const rideSubscriptionOptions: SubscribeToMoreOptions = {
                         // document에는 subcription에 해당하는 쿼리
@@ -175,38 +177,85 @@ class HomeContainer extends React.Component<IProps, IState> {
                         subscribeToMore(rideSubscriptionOptions);
                       }
                       return (
-                        <GetRidebyIdQuery query={GET_RIDE_BY_ID}>
-                          {({ data: getRidebyIdQuery }) => {
-                            console.log('리퀘스티드 : ', requested);
-                            console.log('데이터 : ', getRidebyIdQuery);
+                        <AcceptRide
+                          mutation={ACCEPT_RIDE}
+                          onCompleted={this.handleRideAcceptance}
+                        >
+                          {(acceptRideFn) => {
                             return (
-                              <AcceptRide
-                                mutation={ACCEPT_RIDE}
-                                refetchQueries={[{ query: GET_RIDE_BY_ID }]}
-                                onCompleted={this.handleRideAcceptance}
+                              <GetRidebyIdQuery
+                                query={GET_RIDE_BY_ID}
+                                onCompleted={this.goMatching}
                               >
-                                {(acceptRideFn) => (
-                                  <HomePresenter
-                                    requested={requested}
-                                    isMenuOpen={isMenuOpen}
-                                    toggleMenu={this.toggleMenu}
-                                    mapRef={this.mapRef}
-                                    toAddress={toAddress}
-                                    onInputChange={this.onInputChange}
-                                    price={price}
-                                    data={data}
-                                    onAddressSubmit={this.onAddressSubmit}
-                                    requestRideFn={requestRideFn}
-                                    getNearbyRide={getNearbyRide}
-                                    acceptRideFn={acceptRideFn}
-                                    enter={this.enter}
-                                    getRidebyIdQuery={getRidebyIdQuery}
-                                  />
-                                )}
-                              </AcceptRide>
+                                {({
+                                  data: getRidebyIdQuery,
+                                  subscribeToMore,
+                                }) => {
+                                  const subscribeToPassengerOptions: SubscribeToMoreOptions = {
+                                    document: RIDE_SUBSCRIPTION_HOME,
+                                    updateQuery: (
+                                      prev,
+                                      { subscriptionData }
+                                    ) => {
+                                      if (!subscriptionData.data) {
+                                        return prev;
+                                      }
+                                      console.log('프리뷰 :', prev);
+                                      console.log(
+                                        subscriptionData.data
+                                          .RideStatusSubscription
+                                      );
+                                      if (
+                                        subscriptionData.data
+                                          .RideStatusSubscription.status ===
+                                        'FINISHED'
+                                      ) {
+                                        return;
+                                      }
+                                      const newObject = Object.assign(
+                                        {},
+                                        prev,
+                                        {
+                                          GetRidebyId: {
+                                            ...prev.GetRidebyId,
+                                            ride:
+                                              subscriptionData.data
+                                                .RideStatusSubscription,
+                                          },
+                                        }
+                                      );
+                                      return newObject;
+                                    },
+                                  };
+                                  if (!isDriving) {
+                                    subscribeToMore(
+                                      subscribeToPassengerOptions
+                                    );
+                                  }
+
+                                  return (
+                                    <HomePresenter
+                                      requested={requested}
+                                      isMenuOpen={isMenuOpen}
+                                      toggleMenu={this.toggleMenu}
+                                      mapRef={this.mapRef}
+                                      toAddress={toAddress}
+                                      onInputChange={this.onInputChange}
+                                      price={price}
+                                      data={data}
+                                      onAddressSubmit={this.onAddressSubmit}
+                                      requestRideFn={requestRideFn}
+                                      getNearbyRide={getNearbyRide}
+                                      acceptRideFn={acceptRideFn}
+                                      enter={this.enter}
+                                      getRidebyIdQuery={getRidebyIdQuery}
+                                    />
+                                  );
+                                }}
+                              </GetRidebyIdQuery>
                             );
                           }}
-                        </GetRidebyIdQuery>
+                        </AcceptRide>
                       );
                     }}
                   </GetNearbyRidesQuery>
@@ -232,6 +281,7 @@ class HomeContainer extends React.Component<IProps, IState> {
       coords: { latitude, longitude },
     } = position;
     // 들어온  position값으로 state를 set
+    console.log(latitude, longitude);
     this.setState({
       lat: latitude,
       lng: longitude,
@@ -254,6 +304,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     //index.tsx의 GoogleApiWrapper를통해 props에  google객체가 들어가있음
     const { google } = this.props;
     const maps = google.maps;
+    console.log('디스맵커런트 : ', this.mapRef.current);
     const mapNode = ReactDOM.findDOMNode(this.mapRef.current);
     if (!mapNode) {
       this.loadMap(lat, lng);
@@ -519,7 +570,24 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { history } = this.props;
     const { UpdateRideStatus } = data;
     if (UpdateRideStatus) {
+      console.log('이거당 : ', UpdateRideStatus);
       history.push(`/ride/${UpdateRideStatus.rideId}`);
+    }
+  };
+
+  public goMatching = (data) => {
+    const { history } = this.props;
+    if (data) {
+      if (data.GetRidebyId) {
+        if (data.GetRidebyId.ride) {
+          if (
+            data.GetRidebyId.ride.status === 'ONROUTE' ||
+            data.GetRidebyId.ride.status === 'ACCEPTED'
+          ) {
+            history.push(`/ride/${data.GetRidebyId.ride.id}`);
+          }
+        }
+      }
     }
   };
 }
