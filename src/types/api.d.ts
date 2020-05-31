@@ -277,6 +277,73 @@ export interface nearbyRides {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: getRidebyId
+// ====================================================
+
+export interface getRidebyId_GetRidebyId_ride {
+  __typename: "Ride";
+  id: number;
+  status: string;
+}
+
+export interface getRidebyId_GetRidebyId {
+  __typename: "GetRidebyIdResponse";
+  ok: boolean;
+  error: string | null;
+  ride: getRidebyId_GetRidebyId_ride | null;
+}
+
+export interface getRidebyId {
+  GetRidebyId: getRidebyId_GetRidebyId;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL subscription operation: rideUpdatesHome
+// ====================================================
+
+export interface rideUpdatesHome_RideStatusSubscription_driver {
+  __typename: "User";
+  id: number;
+  fullName: string | null;
+  profilePhoto: string | null;
+}
+
+export interface rideUpdatesHome_RideStatusSubscription_passenger {
+  __typename: "User";
+  id: number;
+  fullName: string | null;
+  profilePhoto: string | null;
+}
+
+export interface rideUpdatesHome_RideStatusSubscription {
+  __typename: "Ride";
+  id: number;
+  status: string;
+  pickUpAddress: string;
+  dropOffAddress: string;
+  price: number;
+  distance: string;
+  duration: string;
+  driver: rideUpdatesHome_RideStatusSubscription_driver;
+  passenger: rideUpdatesHome_RideStatusSubscription_passenger;
+  chatId: number | null;
+}
+
+export interface rideUpdatesHome {
+  RideStatusSubscription: rideUpdatesHome_RideStatusSubscription | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: startPhoneVerification
 // ====================================================
 

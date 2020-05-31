@@ -100,3 +100,41 @@ export const SUBSCRIBE_NEARBY_RIDES = gql`
     }
   }
 `;
+
+export const GET_RIDE_BY_ID = gql`
+  query getRidebyId {
+    GetRidebyId {
+      ok
+      error
+      ride {
+        id
+        status
+      }
+    }
+  }
+`;
+
+export const RIDE_SUBSCRIPTION_HOME = gql`
+  subscription rideUpdatesHome {
+    RideStatusSubscription {
+      id
+      status
+      pickUpAddress
+      dropOffAddress
+      price
+      distance
+      duration
+      driver {
+        id
+        fullName
+        profilePhoto
+      }
+      passenger {
+        id
+        fullName
+        profilePhoto
+      }
+      chatId
+    }
+  }
+`;

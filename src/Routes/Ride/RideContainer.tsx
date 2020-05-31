@@ -32,7 +32,6 @@ class RideContainer extends React.Component<IProps> {
         params: { rideId },
       },
     } = this.props;
-    console.log('라이드아이디 : ', typeof rideId);
 
     return (
       <ProfileQuery query={USER_PROFILE}>
@@ -40,6 +39,7 @@ class RideContainer extends React.Component<IProps> {
           <RideQuery
             query={GET_RIDE}
             variables={{ rideId: parseInt(rideId, 10) }}
+            onCompleted={this.goHome}
           >
             {({ data, loading, subscribeToMore }) => {
               const subscribeOptions: SubscribeToMoreOptions = {
@@ -56,14 +56,16 @@ class RideContainer extends React.Component<IProps> {
                     },
                   ]}
                 >
-                  {(updateRideFn) => (
-                    <RidePresenter
-                      userData={userData}
-                      loading={loading}
-                      data={data}
-                      updateRideFn={updateRideFn}
-                    />
-                  )}
+                  {(updateRideFn) => {
+                    return (
+                      <RidePresenter
+                        userData={userData}
+                        loading={loading}
+                        data={data}
+                        updateRideFn={updateRideFn}
+                      />
+                    );
+                  }}
                 </RideUpdate>
               );
             }}
@@ -72,6 +74,17 @@ class RideContainer extends React.Component<IProps> {
       </ProfileQuery>
     );
   }
+  public goHome = (data) => {
+    if (data) {
+      if (data.GetRide) {
+        if (!data.GetRide.ride || data.GetRide.ride.status === 'FINISHED') {
+          console.log('라이드에서 홈으로가버려짐');
+          const { history } = this.props;
+          history.push('/');
+        }
+      }
+    }
+  };
 }
 
 export default RideContainer;

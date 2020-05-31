@@ -9,6 +9,7 @@ import {
   getNearbyRides,
   acceptRideVariables,
   acceptRide,
+  getRidebyId,
 } from '../../types/api';
 import { Query, graphql, MutationFn, Mutation } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
@@ -21,16 +22,19 @@ import { toast } from 'react-toastify';
 
 import { reportMovement, reportMovementVariables } from '../../types/api';
 import {
+  RIDE_SUBSCRIPTION_HOME,
   SUBSCRIBE_NEARBY_RIDES,
   REPORT_LOCATION,
   GET_NEARBY_DRIVERS,
   REQUEST_RIDE,
   GET_NEARBY_RIDE,
   ACCEPT_RIDE,
+  GET_RIDE_BY_ID,
 } from './HomeQueries';
 import { SubscribeToMoreOptions } from 'apollo-boost';
 
 interface IState {
+  requested: boolean;
   isMenuOpen: boolean;
   lat: number;
   lng: number;
@@ -55,6 +59,7 @@ class NearbyQuery extends Query<getNearbyDrivers> {}
 class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
 class GetNearbyRidesQuery extends Query<getNearbyRides> {}
 class AcceptRide extends Mutation<acceptRide, acceptRideVariables> {}
+class GetRidebyIdQuery extends Query<getRidebyId> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -68,6 +73,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   public drivers: google.maps.Marker[];
   //state 설정
   public state = {
+    requested: false,
     fromAddress: '',
     isMenuOpen: false,
     lat: 0,
@@ -98,6 +104,7 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public render() {
     const {
+      requested,
       isMenuOpen,
       toAddress,
       distance,
@@ -141,6 +148,7 @@ class HomeContainer extends React.Component<IProps, IState> {
                     skip={!isDriving}
                   >
                     {({ subscribeToMore, data: getNearbyRide }) => {
+                      console.log('라이드 : ', getNearbyRide);
                       //subscribe할 옵션설정
                       const rideSubscriptionOptions: SubscribeToMoreOptions = {
                         // document에는 subcription에 해당하는 쿼리
@@ -173,22 +181,80 @@ class HomeContainer extends React.Component<IProps, IState> {
                           mutation={ACCEPT_RIDE}
                           onCompleted={this.handleRideAcceptance}
                         >
-                          {(acceptRideFn) => (
-                            <HomePresenter
-                              isMenuOpen={isMenuOpen}
-                              toggleMenu={this.toggleMenu}
-                              mapRef={this.mapRef}
-                              toAddress={toAddress}
-                              onInputChange={this.onInputChange}
-                              price={price}
-                              data={data}
-                              onAddressSubmit={this.onAddressSubmit}
-                              requestRideFn={requestRideFn}
-                              getNearbyRide={getNearbyRide}
-                              acceptRideFn={acceptRideFn}
-                              enter={this.enter}
-                            />
-                          )}
+                          {(acceptRideFn) => {
+                            return (
+                              <GetRidebyIdQuery
+                                query={GET_RIDE_BY_ID}
+                                onCompleted={this.goMatching}
+                              >
+                                {({
+                                  data: getRidebyIdQuery,
+                                  subscribeToMore,
+                                }) => {
+                                  const subscribeToPassengerOptions: SubscribeToMoreOptions = {
+                                    document: RIDE_SUBSCRIPTION_HOME,
+                                    updateQuery: (
+                                      prev,
+                                      { subscriptionData }
+                                    ) => {
+                                      if (!subscriptionData.data) {
+                                        return prev;
+                                      }
+                                      console.log('프리뷰 :', prev);
+                                      console.log(
+                                        subscriptionData.data
+                                          .RideStatusSubscription
+                                      );
+                                      if (
+                                        subscriptionData.data
+                                          .RideStatusSubscription.status ===
+                                        'FINISHED'
+                                      ) {
+                                        return;
+                                      }
+                                      const newObject = Object.assign(
+                                        {},
+                                        prev,
+                                        {
+                                          GetRidebyId: {
+                                            ...prev.GetRidebyId,
+                                            ride:
+                                              subscriptionData.data
+                                                .RideStatusSubscription,
+                                          },
+                                        }
+                                      );
+                                      return newObject;
+                                    },
+                                  };
+                                  if (!isDriving) {
+                                    subscribeToMore(
+                                      subscribeToPassengerOptions
+                                    );
+                                  }
+
+                                  return (
+                                    <HomePresenter
+                                      requested={requested}
+                                      isMenuOpen={isMenuOpen}
+                                      toggleMenu={this.toggleMenu}
+                                      mapRef={this.mapRef}
+                                      toAddress={toAddress}
+                                      onInputChange={this.onInputChange}
+                                      price={price}
+                                      data={data}
+                                      onAddressSubmit={this.onAddressSubmit}
+                                      requestRideFn={requestRideFn}
+                                      getNearbyRide={getNearbyRide}
+                                      acceptRideFn={acceptRideFn}
+                                      enter={this.enter}
+                                      getRidebyIdQuery={getRidebyIdQuery}
+                                    />
+                                  );
+                                }}
+                              </GetRidebyIdQuery>
+                            );
+                          }}
                         </AcceptRide>
                       );
                     }}
@@ -215,6 +281,7 @@ class HomeContainer extends React.Component<IProps, IState> {
       coords: { latitude, longitude },
     } = position;
     // 들어온  position값으로 state를 set
+    console.log(latitude, longitude);
     this.setState({
       lat: latitude,
       lng: longitude,
@@ -237,6 +304,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     //index.tsx의 GoogleApiWrapper를통해 props에  google객체가 들어가있음
     const { google } = this.props;
     const maps = google.maps;
+    console.log('디스맵커런트 : ', this.mapRef.current);
     const mapNode = ReactDOM.findDOMNode(this.mapRef.current);
     if (!mapNode) {
       this.loadMap(lat, lng);
@@ -360,8 +428,6 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public createPath = () => {
     const { toLat, toLng, lat, lng } = this.state;
-    console.log('lat, lng : ', lat, ',', lng);
-    console.log('toLat, toLng : ', toLat, ',', toLng);
     if (this.directions) {
       this.directions.setMap(null);
     }
@@ -473,8 +539,8 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { RequestRide } = data;
     if (RequestRide) {
       toast.success('요청이 완료되었습니다. 운전자를 찾고있습니다.');
-      console.log(history);
-      history.push(`/ride/${RequestRide.ride!.id}`);
+      this.setState({ requested: true });
+      history.push('/');
     }
   };
   public handleProfileQuery = (data: userProfile) => {
@@ -504,7 +570,24 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { history } = this.props;
     const { UpdateRideStatus } = data;
     if (UpdateRideStatus) {
+      console.log('이거당 : ', UpdateRideStatus);
       history.push(`/ride/${UpdateRideStatus.rideId}`);
+    }
+  };
+
+  public goMatching = (data) => {
+    const { history } = this.props;
+    if (data) {
+      if (data.GetRidebyId) {
+        if (data.GetRidebyId.ride) {
+          if (
+            data.GetRidebyId.ride.status === 'ONROUTE' ||
+            data.GetRidebyId.ride.status === 'ACCEPTED'
+          ) {
+            history.push(`/ride/${data.GetRidebyId.ride.id}`);
+          }
+        }
+      }
     }
   };
 }
