@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import AddPlace from '../../Routes/AddPlace';
+import Chat from '../../Routes/Chat';
 import EditAccount from '../../Routes/EditAccount';
 import FindAddress from '../../Routes/FindAddress';
 import Home from '../../Routes/Home';
@@ -12,7 +13,6 @@ import Ride from '../../Routes/Ride';
 import Settings from '../../Routes/Settings';
 import SocialLogin from '../../Routes/SocialLogin';
 import VerifyPhone from '../../Routes/VerifyPhone';
-import Chat from '../../Routes/Chat';
 
 interface IProps {
   isLoggedIn: boolean;
