@@ -1,32 +1,12 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import RidePresenter from './RidePresenter';
-import {
-  getRide,
-  getRideVariables,
-  userProfile,
-  updateRide,
-  updateRideVariables,
-} from '../../types/api';
-import { Query, Mutation } from 'react-apollo';
-import { GET_RIDE, RIDE_SUBSCRIPTION, UPDATE_RIDE_STATUS } from './RideQueries';
-import { USER_PROFILE } from '../../sharedQueries.queries';
-import { SubscribeToMoreOptions } from 'apollo-boost';
-
-class RideQuery extends Query<getRide, getRideVariables> {}
-class ProfileQuery extends Query<userProfile> {}
-class RideUpdate extends Mutation<updateRide, updateRideVariables> {}
 
 interface IProps extends RouteComponentProps<any> {}
 
 class RideContainer extends React.Component<IProps> {
-  constructor(props: IProps) {
-    super(props);
-    if (!props.match.params.rideId) {
-      props.history.push('/');
-    }
-  }
   public render() {
+<<<<<<< HEAD
     const {
       match: {
         params: { rideId },
@@ -79,6 +59,9 @@ class RideContainer extends React.Component<IProps> {
         )}
       </ProfileQuery>
     );
+=======
+    return <RidePresenter />;
+>>>>>>> parent of 538ce92... #2.74
   }
   public goHome = (data) => {
     if (data) {
