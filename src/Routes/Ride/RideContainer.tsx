@@ -1,17 +1,38 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import RidePresenter from './RidePresenter';
+import {
+  getRide,
+  getRideVariables,
+  userProfile,
+  updateRide,
+  updateRideVariables,
+} from '../../types/api';
+import { Query, Mutation } from 'react-apollo';
+import { GET_RIDE, RIDE_SUBSCRIPTION, UPDATE_RIDE_STATUS } from './RideQueries';
+import { USER_PROFILE } from '../../sharedQueries.queries';
+import { SubscribeToMoreOptions } from 'apollo-boost';
+
+class RideQuery extends Query<getRide, getRideVariables> {}
+class ProfileQuery extends Query<userProfile> {}
+class RideUpdate extends Mutation<updateRide, updateRideVariables> {}
 
 interface IProps extends RouteComponentProps<any> {}
 
 class RideContainer extends React.Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+    if (!props.match.params.rideId) {
+      props.history.push('/');
+    }
+  }
   public render() {
-<<<<<<< HEAD
     const {
       match: {
         params: { rideId },
       },
     } = this.props;
+    console.log('라이드아이디 : ', typeof rideId);
 
     return (
       <ProfileQuery query={USER_PROFILE}>
@@ -19,7 +40,6 @@ class RideContainer extends React.Component<IProps> {
           <RideQuery
             query={GET_RIDE}
             variables={{ rideId: parseInt(rideId, 10) }}
-            onCompleted={this.goHome}
           >
             {({ data, loading, subscribeToMore }) => {
               const subscribeOptions: SubscribeToMoreOptions = {
@@ -28,9 +48,17 @@ class RideContainer extends React.Component<IProps> {
                   if (!subscriptionData.data) {
                     return prev;
                   }
-                  console.log(prev, subscriptionData);
+                  const {
+                    data: {
+                      RideStatusSubscription: { status },
+                    },
+                  } = subscriptionData;
+                  if (status === 'FINISHED') {
+                    window.location.href = '/';
+                  }
                 },
               };
+
               subscribeToMore(subscribeOptions);
               return (
                 <RideUpdate
@@ -42,16 +70,14 @@ class RideContainer extends React.Component<IProps> {
                     },
                   ]}
                 >
-                  {(updateRideFn) => {
-                    return (
-                      <RidePresenter
-                        userData={userData}
-                        loading={loading}
-                        data={data}
-                        updateRideFn={updateRideFn}
-                      />
-                    );
-                  }}
+                  {(updateRideFn) => (
+                    <RidePresenter
+                      userData={userData}
+                      loading={loading}
+                      data={data}
+                      updateRideFn={updateRideFn}
+                    />
+                  )}
                 </RideUpdate>
               );
             }}
@@ -59,21 +85,7 @@ class RideContainer extends React.Component<IProps> {
         )}
       </ProfileQuery>
     );
-=======
-    return <RidePresenter />;
->>>>>>> parent of 538ce92... #2.74
   }
-  public goHome = (data) => {
-    if (data) {
-      if (data.GetRide) {
-        if (!data.GetRide.ride || data.GetRide.ride.status === 'FINISHED') {
-          console.log('라이드에서 홈으로가버려짐');
-          const { history } = this.props;
-          history.push('/');
-        }
-      }
-    }
-  };
 }
 
 export default RideContainer;

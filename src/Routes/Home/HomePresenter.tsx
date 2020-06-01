@@ -12,7 +12,6 @@ import {
   getNearbyRides,
   acceptRide,
   acceptRideVariables,
-  getRidebyId,
 } from '../../types/api';
 import { MutationFn } from 'react-apollo';
 import RidePopUp from '../../Components/RidePopUp';
@@ -33,17 +32,6 @@ const MenuButton = styled.button`
   transform: rotate(90deg);
   z-index: 2;
   background-color: transparent;
-`;
-
-const CancelButton = styled(Button)`
-  position: absolute;
-  bottom: 50px;
-  left: 0;
-  right: 0;
-  margin: auto;
-  z-index: 10;
-  height: auto;
-  width: 80%;
 `;
 
 const ExtendedButton = styled(Button)`
@@ -67,7 +55,6 @@ const Map = styled.div`
 `;
 
 interface IProps {
-  requested: boolean;
   isMenuOpen: boolean;
   toggleMenu: () => void;
   mapRef: any;
@@ -80,11 +67,9 @@ interface IProps {
   getNearbyRide?: getNearbyRides | any;
   acceptRideFn: MutationFn<acceptRide, acceptRideVariables> | any;
   enter: any;
-  getRidebyIdQuery: getRidebyId | undefined;
 }
 
 const HomePresenter: React.SFC<IProps> = ({
-  requested,
   isMenuOpen,
   toggleMenu,
   mapRef,
@@ -97,7 +82,6 @@ const HomePresenter: React.SFC<IProps> = ({
   data: { GetMyProfile: { user = null } = {} } = {},
   requestRideFn,
   getNearbyRide: { GetNearbyRides: { ride = null } = {} } = {},
-  getRidebyIdQuery: { GetRidebyId: { ok = null } = {} } = {},
 }) => (
   <Container>
     <Helmet>
@@ -116,30 +100,27 @@ const HomePresenter: React.SFC<IProps> = ({
       }}
     >
       {<MenuButton onClick={toggleMenu}>|||</MenuButton>}
-      {user && user.isDriving && <></>}
-      {user && !user.isDriving && !ok && !requested && (
+      {user && !user.isDriving && (
         <React.Fragment>
           <AddressBar
-            readOnly={false}
             name={'toAddress'}
             onChange={onInputChange}
             value={toAddress}
             onBlur={null}
             enter={enter}
           />
-
           <ExtendedButton
             onClick={onAddressSubmit}
             disabled={toAddress === ''}
-            value={price ? '주소 다시 검색' : '주소 검색'}
+            value={price ? 'Change Address' : 'Pick Address'}
           />
         </React.Fragment>
       )}
-      {price !== 0 && !ok && !requested && (
+      {price !== 0 && (
         <RequestButton
           onClick={requestRideFn}
           disabled={toAddress === ''}
-          value={`탑승 요청 : ${price}원`}
+          value={`Request Ride (${price}원)`}
         />
       )}
       {ride && (
@@ -155,24 +136,6 @@ const HomePresenter: React.SFC<IProps> = ({
           acceptRideFn={acceptRideFn}
         />
       )}
-      {(requested || ok) && (
-        <React.Fragment>
-          <AddressBar
-            name={'toAddress'}
-            onChange={onInputChange}
-            value={toAddress}
-            onBlur={null}
-            enter={enter}
-            readOnly={true}
-          />
-          <CancelButton
-            onClick={requestRideFn}
-            disabled={toAddress === ''}
-            value={'탑승 요청 취소'}
-          />
-        </React.Fragment>
-      )}
-
       <Map ref={mapRef} />
     </Sidebar>
   </Container>

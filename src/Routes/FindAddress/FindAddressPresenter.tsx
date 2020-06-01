@@ -76,7 +76,6 @@ class FindAddressPresenter extends React.Component<IProps> {
           <title>Find Address | Juber</title>
         </Helmet>
         <AddressBar
-          readOnly={false}
           enter={enter}
           name={'address'}
           value={address}
