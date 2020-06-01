@@ -3,7 +3,13 @@ import { MutationFn } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Button from '../../Components/Button';
 import styled from '../../typed-components';
-import { getRide, userProfile, updateRide } from '../../types/api';
+import {
+  getRide,
+  userProfile,
+  updateRide,
+  updateRideVariables,
+  StatusOptions,
+} from '../../types/api';
 
 const Container = styled.div`
   padding: 40px;
@@ -19,15 +25,14 @@ const Title = styled.h4`
 `;
 
 const Data = styled.span`
-  color: ${(props) => props.theme.yellowColor};
+  color: ${(props) => props.theme.blueColor};
 `;
 
 const Img = styled.img`
-  object-fit: cover;
   border-radius: 50%;
   margin-right: 20px;
-  width: 100px;
-  height: 100px;
+  max-width: 50px;
+  height: 50px;
 `;
 
 const Passenger = styled.div`
@@ -48,7 +53,7 @@ interface IProps {
   data?: getRide;
   userData?: userProfile;
   loading: boolean;
-  updateRideFn: MutationFn<updateRide, any>;
+  updateRideFn: MutationFn<updateRide, updateRideVariables>;
 }
 
 const RidePresenter: React.SFC<IProps> = ({
@@ -78,7 +83,7 @@ const RidePresenter: React.SFC<IProps> = ({
         <Title>To</Title>
         <Data>{ride.dropOffAddress}</Data>
         <Title>Price</Title>
-        <Data>{ride.price}원</Data>
+        <Data>{ride.price}</Data>
         <Title>Distance</Title>
         <Data>{ride.distance}</Data>
         <Title>Duration</Title>
@@ -93,7 +98,7 @@ const RidePresenter: React.SFC<IProps> = ({
                 updateRideFn({
                   variables: {
                     rideId: ride.id,
-                    status: 'ONROUTE',
+                    status: StatusOptions.ONROUTE,
                   },
                 })
               }
@@ -106,7 +111,7 @@ const RidePresenter: React.SFC<IProps> = ({
                 updateRideFn({
                   variables: {
                     rideId: ride.id,
-                    status: 'FINISHED',
+                    status: StatusOptions.FINISHED,
                   },
                 })
               }

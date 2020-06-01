@@ -44,6 +44,12 @@ class RideContainer extends React.Component<IProps> {
             {({ data, loading, subscribeToMore }) => {
               const subscribeOptions: SubscribeToMoreOptions = {
                 document: RIDE_SUBSCRIPTION,
+                updateQuery: (prev, { subscriptionData }) => {
+                  if (!subscriptionData.data) {
+                    return prev;
+                  }
+                  console.log(prev, subscriptionData);
+                },
               };
               subscribeToMore(subscribeOptions);
               return (
