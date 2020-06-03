@@ -4,20 +4,21 @@ import BackArrow from '../BackArrow';
 
 const Container = styled.header`
   background-color: #fcc159;
+  margin-bottom: 30px;
   color: white;
   display: flex;
   height: 50px;
   font-size: 20px;
   font-weight: 300;
   align-items: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.19), 0 2px 2px rgba(0, 0, 0, 0.23);
   & svg {
     fill: white;
   }
   padding: 0 10px;
 `;
 
-const Title = styled.h2`
+const Title = styled.h2`\
   margin-left: 10px;
 `;
 

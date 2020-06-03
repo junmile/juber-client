@@ -60,6 +60,7 @@ class RideContainer extends React.Component<IProps> {
               };
 
               subscribeToMore(subscribeOptions);
+              console.log('데이따 : ', data);
               return (
                 <RideUpdate
                   mutation={UPDATE_RIDE_STATUS}
