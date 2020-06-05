@@ -9,8 +9,9 @@ import {
   sendMessageVariables,
 } from '../../types/api';
 import ChatPresenter from './ChatPresenter';
-import { GET_CHAT, SEND_MESSAGE } from './ChatQueries';
+import { GET_CHAT, SEND_MESSAGE, SUBSCRIBE_TO_MESSAGES } from './ChatQueries';
 import { USER_PROFILE } from '../../sharedQueries.queries';
+import { SubscribeToMoreOptions } from 'apollo-boost';
 
 interface IProps extends RouteComponentProps<any> {}
 interface IState {
@@ -45,29 +46,66 @@ class ChatContainer extends React.Component<IProps, IState> {
             query={GET_CHAT}
             variables={{ chatId: parseInt(chatId, 10) }}
           >
-            {({ data, loading }) => (
-              <SendMessageMutation mutation={SEND_MESSAGE}>
-                {(sendMessageFn) => {
-                  this.sendMessageFn = sendMessageFn;
-                  console.log('데이타 : ', data);
-                  console.log('로딩 : ', loading);
-                  console.log('유져데이타 : ', userData);
-                  console.log('메세지 : ', message);
-                  console.log('온인풋첸지 : ', this.onInputChange);
-                  console.log('온섭밋 : ', this.onSubmit);
-                  return (
-                    <ChatPresenter
-                      data={data}
-                      loading={loading}
-                      userData={userData}
-                      messageText={message}
-                      onInputChange={this.onInputChange}
-                      onSubmit={this.onSubmit}
-                    />
-                  );
-                }}
-              </SendMessageMutation>
-            )}
+            {({ data, loading, subscribeToMore }) => {
+              const subscribeToMoreOptions: SubscribeToMoreOptions = {
+                document: SUBSCRIBE_TO_MESSAGES,
+                updateQuery: (prev, { subscriptionData }) => {
+                  if (!subscriptionData.data) {
+                    return prev;
+                  }
+                  const {
+                    data: { MessageSubscription },
+                  } = subscriptionData;
+
+                  const {
+                    GetChat: {
+                      chat: { messages },
+                    },
+                  } = prev;
+
+                  const newMessageId = MessageSubscription.id;
+                  const latestMessage = messages[messages.length - 1].id;
+
+                  if (newMessageId === latestMessage) {
+                    return;
+                  }
+
+                  const newObject = Object.assign({}, prev, {
+                    GetChat: {
+                      ...prev.GetChat,
+                      chat: {
+                        ...prev.GetChat.chat,
+                        messages: [
+                          ...prev.GetChat.chat.messages,
+                          subscriptionData.data.MessageSubscription,
+                        ],
+                      },
+                    },
+                  });
+                  console.log('프리뷰 : ', prev);
+                  console.log('뉴옵젝: ', newObject);
+                  return newObject;
+                },
+              };
+              subscribeToMore(subscribeToMoreOptions);
+              return (
+                <SendMessageMutation mutation={SEND_MESSAGE}>
+                  {(sendMessageFn) => {
+                    this.sendMessageFn = sendMessageFn;
+                    return (
+                      <ChatPresenter
+                        data={data}
+                        loading={loading}
+                        userData={userData}
+                        messageText={message}
+                        onInputChange={this.onInputChange}
+                        onSubmit={this.onSubmit}
+                      />
+                    );
+                  }}
+                </SendMessageMutation>
+              );
+            }}
           </ChatQuery>
         )}
       </ProfileQuery>

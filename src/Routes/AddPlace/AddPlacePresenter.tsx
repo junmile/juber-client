@@ -6,7 +6,7 @@ import Input from '../../Components/Input';
 import styled from '../../typed-components';
 import Button from '../../Components/Button';
 import { Link } from 'react-router-dom';
-import { MutationFn, MutationResult } from 'react-apollo';
+import { MutationResult } from 'react-apollo';
 import { addPlace, addPlaceVariables } from '../../types/api';
 
 const Container = styled.div`
@@ -27,8 +27,8 @@ interface IProps {
   address: string;
   name: string;
   onInputChange: (event: React.ChangeEventHandler<HTMLInputElement>) => void;
-  loading: MutationResult<addPlace>;
-  onSubmit: MutationFn<addPlace, addPlaceVariables>;
+  loading: any;
+  onSubmit: any;
   pickedAddress: boolean;
 }
 
@@ -64,7 +64,7 @@ const AddPlacePresenter: React.SFC<IProps> = ({
         <ExtendedLink to={'/find-address'}>지도에서 장소 선택</ExtendedLink>
         {pickedAddress && (
           <Button
-            onClick={null}
+            onClick={onSubmit}
             value={loading ? '장소 추가' : '장소 추가중'}
           />
         )}

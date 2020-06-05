@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from '../../typed-components';
 import { userProfile, toggleDriving } from '../../types/api';
-import { MutationFn } from 'react-apollo';
 
 const Container = styled.div`
   height: 100%;
@@ -80,7 +79,7 @@ const ToggleDriving = styled<IToggleProps, any>('button')`
 interface IProps {
   data?: userProfile;
   loading: boolean;
-  toggleDrivingFn: MutationFn<toggleDriving>;
+  toggleDrivingFn: any;
 }
 
 const MenuPresenter: React.SFC<IProps> = ({

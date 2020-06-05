@@ -94,7 +94,10 @@ const RidePopUp: React.SFC<IProps> = ({
       </Passenger>
     </SubContainer>
     <Button
-      onClick={() => acceptRideFn({ variables: { rideId: id } })}
+      onClick={() => {
+        acceptRideFn({ variables: { rideId: id } });
+        // crate chat `
+      }}
       value={'수락'}
     />
   </Container>

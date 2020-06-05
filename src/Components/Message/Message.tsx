@@ -10,7 +10,7 @@ const Container = styled<{ mine: boolean }, any>('div')`
   padding: 20px 20px;
   margin-bottom: 10px;
   border-radius: ${(props) =>
-    !props.mine ? '10px 10px 10px 0' : '10px 10px 0 10px'};
+    !props.mine ? '15px 15px 15px 0' : '15px 15px 0 15px'};
   align-self: ${(props) => (props.mine ? 'flex-end' : 'flex-start')};
 `;
 
