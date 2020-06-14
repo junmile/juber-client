@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from '../../typed-components';
-import { MutationFn } from 'react-apollo';
-import { editPlace, editPlaceVariables } from '../../types/api';
 
 const Place = styled.div`
   margin: 15px 0;
@@ -33,7 +31,7 @@ interface IProps {
   fav: boolean;
   name: string;
   address: string;
-  onStarPress: MutationFn<editPlace, editPlaceVariables>;
+  onStarPress: any;
 }
 
 const PlacePresenter: React.SFC<IProps> = ({

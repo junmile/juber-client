@@ -17,6 +17,7 @@ const BackArrowExtended = styled(BackArrow)`
 `;
 
 const Title = styled.h2`
+  color: ${(props) => props.theme.yellowColor};
   font-size: 25px;
   margin-bottom: 40px;
 `;
@@ -75,7 +76,7 @@ const PhoneLoginPresenter: React.SFC<IProps> = ({
       <title>Phone Login | Number</title>
     </Helmet>
     <BackArrowExtended backTo={'/'} />
-    <Title>Enter your mobile number</Title>
+    <Title>핸드폰번호를 입력해 주세요.</Title>
     <CountrySelect
       value={countryCode}
       name={'countryCode'}

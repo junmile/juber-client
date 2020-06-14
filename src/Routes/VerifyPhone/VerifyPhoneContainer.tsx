@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import VerifyPhonePresenter from './VerifyPhonePresenter';
-import { graphql, Mutation, MutationFn } from 'react-apollo';
+import { graphql, Mutation } from 'react-apollo';
 import { verifyPhone, verifyPhoneVariables } from '../../types/api';
 import { VERIFY_PHONE } from './VerifyPhoneQueries';
 import { toast } from 'react-toastify';
@@ -13,10 +13,8 @@ interface IState {
 }
 
 interface IProps extends RouteComponentProps<any> {
-  logUserIn: MutationFn;
+  logUserIn: any;
 }
-
-class VerifyMutation extends Mutation<verifyPhone, verifyPhoneVariables> {}
 
 class VerifyPhoneContainer extends React.Component<IProps, IState> {
   constructor(props) {
@@ -37,7 +35,7 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
     return (
       <Mutation mutation={LOG_USER_IN}>
         {(logUserIn) => (
-          <VerifyMutation
+          <Mutation<verifyPhone, verifyPhoneVariables>
             mutation={VERIFY_PHONE}
             variables={{
               key: verificationKey,
@@ -67,7 +65,7 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
                 loading={loading}
               />
             )}
-          </VerifyMutation>
+          </Mutation>
         )}
       </Mutation>
     );

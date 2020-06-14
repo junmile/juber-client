@@ -5,12 +5,12 @@ import {
   userProfile,
   getNearbyDrivers,
   requestRide,
-  requestRideVariables,
   getNearbyRides,
-  acceptRideVariables,
   acceptRide,
+  requestRideVariables,
+  acceptRideVariables,
 } from '../../types/api';
-import { Query, graphql, MutationFn, Mutation } from 'react-apollo';
+import { Query, graphql, Mutation } from 'react-apollo';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import ReactDOM from 'react-dom';
 import carIcon from '../../images/car.png';
@@ -47,14 +47,8 @@ interface IState {
 
 interface IProps extends RouteComponentProps<any> {
   google: any;
-  reportLocation: MutationFn;
+  reportLocation: any;
 }
-
-class ProfileQuery extends Query<userProfile> {}
-class NearbyQuery extends Query<getNearbyDrivers> {}
-class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
-class GetNearbyRidesQuery extends Query<getNearbyRides> {}
-class AcceptRide extends Mutation<acceptRide, acceptRideVariables> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -96,111 +90,6 @@ class HomeContainer extends React.Component<IProps, IState> {
     );
   }
 
-  public render() {
-    const {
-      isMenuOpen,
-      toAddress,
-      distance,
-      fromAddress,
-      lat,
-      lng,
-      toLat,
-      toLng,
-      price,
-      duration,
-      isDriving,
-    } = this.state;
-    return (
-      <ProfileQuery query={USER_PROFILE} onCompleted={this.handleProfileQuery}>
-        {({ data, loading }) => (
-          <NearbyQuery
-            query={GET_NEARBY_DRIVERS}
-            pollInterval={5000}
-            skip={isDriving}
-            onCompleted={this.handleNearbyDrivers}
-          >
-            {() => (
-              <RequestRideMutation
-                mutation={REQUEST_RIDE}
-                onCompleted={this.handleRideRequest}
-                variables={{
-                  distance,
-                  pickUpAddress: fromAddress,
-                  pickUpLat: lat,
-                  pickUpLng: lng,
-                  dropOffLat: toLat,
-                  dropOffLng: toLng,
-                  dropOffAddress: toAddress,
-                  price: price || 0,
-                  duration: duration || '',
-                }}
-              >
-                {(requestRideFn) => (
-                  <GetNearbyRidesQuery
-                    query={GET_NEARBY_RIDE}
-                    skip={!isDriving}
-                  >
-                    {({ subscribeToMore, data: getNearbyRide }) => {
-                      //subscribe할 옵션설정
-                      const rideSubscriptionOptions: SubscribeToMoreOptions = {
-                        // document에는 subcription에 해당하는 쿼리
-                        document: SUBSCRIBE_NEARBY_RIDES,
-                        // updateQuery에는 기존의 쿼리(prev) 로부터 result 결과를 얻음
-                        updateQuery: (prev, { subscriptionData }) => {
-                          //subscriptionData.data가 존재하지 않을때 기존의 prev객체를 리턴한다(getNearbyRide)
-                          if (!subscriptionData.data) {
-                            return prev;
-                          }
-                          //아닐경우 prev와 같은 형태의 구조로 리턴을 해주어야함
-                          //Object.assign 은 맨앞의 파라메터에 차순의 파라메터의 값을 병합한다
-                          //빈 파라메터에 prev의 파라메터를 병합하고
-                          //prev의 파라메터에 GetNearbyRides에 ...prev.GetNearbyRides 값을 병함하고 GetNearbyRides의 ride값에는 subscriptionData.data.nearbyRideSubscription값을 병함한다
-                          const newObject = Object.assign({}, prev, {
-                            GetNearbyRides: {
-                              ...prev.GetNearbyRides,
-                              ride:
-                                subscriptionData.data.NearbyRideSubscription,
-                            },
-                          });
-                          return newObject;
-                        },
-                      };
-                      if (isDriving) {
-                        subscribeToMore(rideSubscriptionOptions);
-                      }
-                      return (
-                        <AcceptRide
-                          mutation={ACCEPT_RIDE}
-                          onCompleted={this.handleRideAcceptance}
-                        >
-                          {(acceptRideFn) => (
-                            <HomePresenter
-                              isMenuOpen={isMenuOpen}
-                              toggleMenu={this.toggleMenu}
-                              mapRef={this.mapRef}
-                              toAddress={toAddress}
-                              onInputChange={this.onInputChange}
-                              price={price}
-                              data={data}
-                              onAddressSubmit={this.onAddressSubmit}
-                              requestRideFn={requestRideFn}
-                              getNearbyRide={getNearbyRide}
-                              acceptRideFn={acceptRideFn}
-                              enter={this.enter}
-                            />
-                          )}
-                        </AcceptRide>
-                      );
-                    }}
-                  </GetNearbyRidesQuery>
-                )}
-              </RequestRideMutation>
-            )}
-          </NearbyQuery>
-        )}
-      </ProfileQuery>
-    );
-  }
   public toggleMenu = () => {
     this.setState((state) => {
       return {
@@ -225,7 +114,7 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public getFromAddress = async (lat: number, lng: number) => {
     const address = await reverseGeoCode(lat, lng);
-    console.log(address);
+    console.log('getForomAddress : ', address);
     if (address) {
       this.setState({
         fromAddress: address,
@@ -418,15 +307,14 @@ class HomeContainer extends React.Component<IProps, IState> {
     return price ? price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0';
   };
 
-  public handleNearbyDrivers = (data: {} | getNearbyDrivers) => {
-    if ('GetNearbyDrivers' in data) {
+  public handleNearbyDrivers = (data: getNearbyDrivers) => {
+    if (data) {
       const {
         GetNearbyDrivers: { drivers, ok },
       } = data;
       if (ok && drivers) {
         for (const driver of drivers) {
           if (driver && driver.lastLat && driver.lastLng) {
-            console.log('드라이버의 아이디 : ', driver.id);
             //마커가 existingDriver의 요구조건을 충족시키는(drivers의 각 ID가 markerId와 같은 drivers의 엘리먼트인지 )
             //새로운출현(아이디가 다르다면 마커를 추가해야하므로)
             const exisitingDriver:
@@ -509,6 +397,118 @@ class HomeContainer extends React.Component<IProps, IState> {
       history.push(`/ride/${UpdateRideStatus.rideId}`);
     }
   };
+
+  public render() {
+    const {
+      isMenuOpen,
+      toAddress,
+      distance,
+      fromAddress,
+      lat,
+      lng,
+      toLat,
+      toLng,
+      price,
+      duration,
+      isDriving,
+    } = this.state;
+    return (
+      <Query<userProfile>
+        query={USER_PROFILE}
+        onCompleted={this.handleProfileQuery}
+      >
+        {({ data, loading }) => {
+          return (
+            <Query<getNearbyDrivers>
+              query={GET_NEARBY_DRIVERS}
+              fetchPolicy={'cache-and-network'}
+              pollInterval={1000}
+              skip={isDriving}
+              onCompleted={this.handleNearbyDrivers}
+            >
+              {() => (
+                <Mutation<requestRide, requestRideVariables>
+                  mutation={REQUEST_RIDE}
+                  onCompleted={this.handleRideRequest}
+                  variables={{
+                    distance,
+                    pickUpAddress: fromAddress,
+                    pickUpLat: lat,
+                    pickUpLng: lng,
+                    dropOffLat: toLat,
+                    dropOffLng: toLng,
+                    dropOffAddress: toAddress,
+                    price: price || 0,
+                    duration: duration || '',
+                  }}
+                >
+                  {(requestRideFn) => (
+                    <Query<getNearbyRides>
+                      query={GET_NEARBY_RIDE}
+                      skip={!isDriving}
+                    >
+                      {({ subscribeToMore, data: getNearbyRide }) => {
+                        //subscribe할 옵션설정
+                        const rideSubscriptionOptions: SubscribeToMoreOptions = {
+                          // document에는 subcription에 해당하는 쿼리
+                          document: SUBSCRIBE_NEARBY_RIDES,
+                          // updateQuery에는 기존의 쿼리(prev) 로부터 result 결과를 얻음
+                          updateQuery: (prev, { subscriptionData }) => {
+                            //subscriptionData.data가 존재하지 않을때 기존의 prev객체를 리턴한다(getNearbyRide)
+                            if (!subscriptionData.data) {
+                              return prev;
+                            }
+                            //아닐경우 prev와 같은 형태의 구조로 리턴을 해주어야함
+                            //Object.assign 은 맨앞의 파라메터에 차순의 파라메터의 값을 병합한다
+                            //빈 파라메터에 prev의 파라메터를 병합하고
+                            //prev의 파라메터에 GetNearbyRides에 ...prev.GetNearbyRides 값을 병함하고 GetNearbyRides의 ride값에는 subscriptionData.data.nearbyRideSubscription값을 병함한다
+                            const newObject = Object.assign({}, prev, {
+                              GetNearbyRides: {
+                                ...prev.GetNearbyRides,
+                                ride:
+                                  subscriptionData.data.NearbyRideSubscription,
+                              },
+                            });
+                            return newObject;
+                          },
+                        };
+                        if (isDriving) {
+                          subscribeToMore(rideSubscriptionOptions);
+                        }
+                        return (
+                          <Mutation<acceptRide, acceptRideVariables>
+                            mutation={ACCEPT_RIDE}
+                            onCompleted={this.handleRideAcceptance}
+                          >
+                            {(acceptRideFn) => (
+                              <HomePresenter
+                                isMenuOpen={isMenuOpen}
+                                toggleMenu={this.toggleMenu}
+                                mapRef={this.mapRef}
+                                toAddress={toAddress}
+                                onInputChange={this.onInputChange}
+                                price={price}
+                                data={data}
+                                onAddressSubmit={this.onAddressSubmit}
+                                requestRideFn={requestRideFn}
+                                getNearbyRide={getNearbyRide}
+                                acceptRideFn={acceptRideFn}
+                                enter={this.enter}
+                              />
+                            )}
+                          </Mutation>
+                        );
+                      }}
+                    </Query>
+                  )}
+                </Mutation>
+              )}
+            </Query>
+          );
+        }}
+      </Query>
+    );
+  }
 }
 
 export default graphql<any, reportMovement, reportMovementVariables>(

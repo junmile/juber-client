@@ -1,8 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import AddPlacePresenter from './AddPlacePresenter';
-import { RouteComponentProps } from 'react-router-dom';
-import { Mutation } from 'react-apollo';
-import { addPlace, addPlaceVariables } from '../../types/api';
 import { ADD_PLACE } from './AddPlaceQuery';
 import { GET_PLACES } from '../../sharedQueries.queries';
 import { toast } from 'react-toastify';
@@ -10,12 +7,12 @@ import { useMutation } from 'react-apollo';
 
 const AddPlaceContainer = (props) => {
   const { state = {} } = props.location;
-
+  console.log('스테이트 : ', state);
   const [inputs, setInputs] = useState<{
     address: string;
     name: string;
   }>({
-    address: '',
+    address: state.address || '',
     name: '',
   });
 

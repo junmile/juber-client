@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import RidePresenter from './RidePresenter';
 import {
   getRide,
@@ -7,86 +6,67 @@ import {
   userProfile,
   updateRide,
   updateRideVariables,
+  getChat,
+  getChatVariables,
 } from '../../types/api';
-import { Query, Mutation } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import { GET_RIDE, RIDE_SUBSCRIPTION, UPDATE_RIDE_STATUS } from './RideQueries';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import { SubscribeToMoreOptions } from 'apollo-boost';
+import { GET_CHAT, SUBSCRIBE_TO_MESSAGES } from '../Chat/ChatQueries';
 
-class RideQuery extends Query<getRide, getRideVariables> {}
-class ProfileQuery extends Query<userProfile> {}
-class RideUpdate extends Mutation<updateRide, updateRideVariables> {}
+const RideContainer: React.FC<any> = (props) => {
+  const {
+    match: {
+      params: { rideId },
+    },
+  } = props;
 
-interface IProps extends RouteComponentProps<any> {}
+  console.log(props);
 
-class RideContainer extends React.Component<IProps> {
-  constructor(props: IProps) {
-    super(props);
-    if (!props.match.params.rideId) {
-      props.history.push('/');
-    }
-  }
-  public render() {
-    const {
-      match: {
-        params: { rideId },
-      },
-    } = this.props;
-    console.log('라이드아이디 : ', typeof rideId);
+  const { data: getRideQuery, loading, subscribeToMore } = useQuery<
+    getRide,
+    getRideVariables
+  >(GET_RIDE, { variables: { rideId: parseInt(rideId, 10) } });
 
-    return (
-      <ProfileQuery query={USER_PROFILE}>
-        {({ data: userData }) => (
-          <RideQuery
-            query={GET_RIDE}
-            variables={{ rideId: parseInt(rideId, 10) }}
-          >
-            {({ data, loading, subscribeToMore }) => {
-              const subscribeOptions: SubscribeToMoreOptions = {
-                document: RIDE_SUBSCRIPTION,
-                updateQuery: (prev, { subscriptionData }) => {
-                  if (!subscriptionData.data) {
-                    return prev;
-                  }
-                  const {
-                    data: {
-                      RideStatusSubscription: { status },
-                    },
-                  } = subscriptionData;
-                  if (status === 'FINISHED') {
-                    window.location.href = '/';
-                  }
-                },
-              };
+  const subscribeOptions: SubscribeToMoreOptions = {
+    document: RIDE_SUBSCRIPTION,
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) {
+        return prev;
+      }
 
-              subscribeToMore(subscribeOptions);
-              console.log('데이따 : ', data);
-              return (
-                <RideUpdate
-                  mutation={UPDATE_RIDE_STATUS}
-                  refetchQueries={[
-                    {
-                      query: GET_RIDE,
-                      variables: { rideId: parseInt(rideId, 10) },
-                    },
-                  ]}
-                >
-                  {(updateRideFn) => (
-                    <RidePresenter
-                      userData={userData}
-                      loading={loading}
-                      data={data}
-                      updateRideFn={updateRideFn}
-                    />
-                  )}
-                </RideUpdate>
-              );
-            }}
-          </RideQuery>
-        )}
-      </ProfileQuery>
-    );
-  }
-}
+      const {
+        data: {
+          RideStatusSubscription: { status },
+        },
+      } = subscriptionData;
+
+      if (status === 'FINISHED') {
+        window.location.href = '/';
+      }
+    },
+  };
+
+  subscribeToMore(subscribeOptions);
+
+  const { data: chatData } = useQuery<getChat, getChatVariables>(GET_CHAT, {
+    variables: { type: 'rideId', id: parseInt(rideId, 10) },
+  });
+
+  const { data: userData } = useQuery<userProfile>(USER_PROFILE);
+  const [updateRideMutation] = useMutation<updateRide, updateRideVariables>(
+    UPDATE_RIDE_STATUS
+  );
+
+  return (
+    <RidePresenter
+      userData={userData}
+      loading={loading}
+      data={getRideQuery}
+      updateRideFn={updateRideMutation}
+    />
+  );
+};
 
 export default RideContainer;

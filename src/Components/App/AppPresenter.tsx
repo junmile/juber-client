@@ -13,6 +13,7 @@ import Ride from '../../Routes/Ride';
 import Settings from '../../Routes/Settings';
 import SocialLogin from '../../Routes/SocialLogin';
 import VerifyPhone from '../../Routes/VerifyPhone';
+import EmailLogin from '../../Routes/EmailLogin';
 
 interface IProps {
   isLoggedIn: boolean;
@@ -30,6 +31,7 @@ const LoggedOutRoutes: React.SFC = () => (
     <Route path={'/phone-login'} component={PhoneLogin} />
     <Route path={'/verify-phone'} component={VerifyPhone} />
     <Route path={'/social-login'} component={SocialLogin} />
+    <Route path={'/email-login'} component={EmailLogin} />
     <Redirect from={'*'} to={'/'} />
   </Switch>
 );

@@ -6,8 +6,6 @@ import Input from '../../Components/Input';
 import styled from '../../typed-components';
 import Button from '../../Components/Button';
 import { Link } from 'react-router-dom';
-import { MutationResult } from 'react-apollo';
-import { addPlace, addPlaceVariables } from '../../types/api';
 
 const Container = styled.div`
   padding: 40px;

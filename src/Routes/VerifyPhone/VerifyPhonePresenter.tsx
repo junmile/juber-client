@@ -5,8 +5,6 @@ import Header from '../../Components/Header';
 import Input from '../../Components/Input';
 import styled from '../../typed-components';
 import Form from '../../Components/App/Form';
-import { MutationFn } from 'react-apollo';
-import { verifyPhone, verifyPhoneVariables } from '../../types/api';
 
 const Container = styled.div``;
 
@@ -21,7 +19,7 @@ const ExtendedInput = styled(Input)`
 interface IProps {
   verificationKey: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  onSubmit: MutationFn<verifyPhone, verifyPhoneVariables>;
+  onSubmit: any;
   loading: boolean;
 }
 

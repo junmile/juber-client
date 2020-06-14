@@ -2,7 +2,7 @@ import React from 'react';
 import PhoneLoginPresenter from './PhoneLoginPresenter';
 import { RouteComponentProps } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Mutation, MutationFn } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { PHONE_SIGN_IN } from './PhoneQueries';
 import {
   startPhoneVerification,
@@ -14,18 +14,11 @@ interface IState {
   phoneNumber: string;
 }
 
-class PhoneSignInMutation extends Mutation<
-  startPhoneVerification,
-  startPhoneVerificationVariables
-> {}
-
 class PhoneLoginContainer extends React.Component<
   RouteComponentProps<any>,
   IState
 > {
-  public phoneMutation:
-    | MutationFn<startPhoneVerification, startPhoneVerificationVariables>
-    | undefined = undefined;
+  public phoneMutation: any | undefined = undefined;
   public state = {
     countryCode: '+82',
     phoneNumber: '',
@@ -35,7 +28,7 @@ class PhoneLoginContainer extends React.Component<
     const { history } = this.props;
     const { countryCode, phoneNumber } = this.state;
     return (
-      <PhoneSignInMutation
+      <Mutation<startPhoneVerification, startPhoneVerificationVariables>
         mutation={PHONE_SIGN_IN}
         variables={{ phoneNumber: `${countryCode}${phoneNumber}` }}
         onCompleted={(data) => {
@@ -68,7 +61,7 @@ class PhoneLoginContainer extends React.Component<
             />
           );
         }}
-      </PhoneSignInMutation>
+      </Mutation>
     );
   }
 

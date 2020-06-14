@@ -12,13 +12,11 @@ interface IProps {
   id: number;
 }
 
-class FavMutation extends Mutation<editPlace, editPlaceVariables> {}
-
 class PlaceContainer extends React.Component<IProps> {
   public render() {
     const { fav, name, address, id } = this.props;
     return (
-      <FavMutation
+      <Mutation<editPlace, editPlaceVariables>
         mutation={EDIT_PLACE}
         variables={{ isFav: !fav, placeId: id }}
         refetchQueries={[{ query: GET_PLACES }]}
@@ -31,7 +29,7 @@ class PlaceContainer extends React.Component<IProps> {
             onStarPress={editPlaceFn}
           ></PlacePresenter>
         )}
-      </FavMutation>
+      </Mutation>
     );
   }
 }

@@ -103,7 +103,8 @@ export interface getChat {
 }
 
 export interface getChatVariables {
-  chatId: number;
+  type: string;
+  id: number;
 }
 
 /* tslint:disable */
@@ -182,6 +183,31 @@ export interface updateProfileVariables {
   lastName: string;
   email: string;
   profilePhoto: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: emailSiginIn
+// ====================================================
+
+export interface emailSiginIn_EmailSignIn {
+  __typename: "EmailSignInResponse";
+  ok: boolean;
+  error: string | null;
+  token: string | null;
+}
+
+export interface emailSiginIn {
+  EmailSignIn: emailSiginIn_EmailSignIn;
+}
+
+export interface emailSiginInVariables {
+  email: string;
+  password: string;
 }
 
 /* tslint:disable */

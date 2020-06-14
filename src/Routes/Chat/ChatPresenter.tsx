@@ -30,8 +30,9 @@ interface IProps {
   userData?: userProfile;
   loading: boolean;
   messageText: string;
-  onSubmit: () => void;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  sendMessageFn: any;
+  onInputChange: any;
+  chatId: number;
 }
 
 const ChatPresenter: React.SFC<IProps> = ({
@@ -40,7 +41,8 @@ const ChatPresenter: React.SFC<IProps> = ({
   userData: { GetMyProfile: { user = null } = {} } = {},
   messageText,
   onInputChange,
-  onSubmit,
+  sendMessageFn,
+  chatId,
 }) => (
   <Container>
     <Header title={'Chat'} />
@@ -62,11 +64,24 @@ const ChatPresenter: React.SFC<IProps> = ({
             })}
         </Chat>
         <InputCont>
-          <Form submitFn={onSubmit}>
+          <Form
+            submitFn={() => {
+              console.log('ㄻㄴ앟ㅁㄴㅇ라');
+              sendMessageFn({
+                variables: {
+                  text: messageText,
+                  chatId: Number(chatId),
+                },
+              });
+              onInputChange('');
+            }}
+          >
             <Input
               value={messageText}
               placeholder={'Type your message'}
-              onChange={onInputChange}
+              onChange={(e) => {
+                onInputChange(e.target.value);
+              }}
               name={'message'}
             />
           </Form>

@@ -1,16 +1,11 @@
 import React from 'react';
-import { Mutation, MutationFn } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { RouteComponentProps } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LOG_USER_IN } from '../../sharedQueries';
 import { facebookConnect, facebookConnectVariables } from '../../types/api';
 import SocialLoginPresenter from './SocialLoginPresenter';
 import { FACEBOOK_CONNECT } from './SocialLoginQueries';
-
-class LoginMutation extends Mutation<
-  facebookConnect,
-  facebookConnectVariables
-> {}
 
 interface IState {
   firstName: string;
@@ -29,9 +24,7 @@ class SocialLoginContainer extends React.Component<IProps, IState> {
     lastName: '',
   };
   //facebookMutation은 MutationFn이며 response는 facebookConnect variables는 facebookConnectVariables타입을 참조함
-  public facebookMutation:
-    | MutationFn<facebookConnect, facebookConnectVariables>
-    | undefined = undefined;
+  public facebookMutation: any | undefined = undefined;
 
   public render() {
     return (
@@ -39,7 +32,7 @@ class SocialLoginContainer extends React.Component<IProps, IState> {
         {(logUserIn) => (
           //mutation logUserIn($token: String!) { logUserIn(token: $token) @client}
           // logUserIn Mutation은 token값을 variables로 요구한다.
-          <LoginMutation
+          <Mutation<facebookConnect, facebookConnectVariables>
             mutation={FACEBOOK_CONNECT}
             //facebookConnect의 리턴값
             onCompleted={(data) => {
@@ -62,7 +55,7 @@ class SocialLoginContainer extends React.Component<IProps, IState> {
                 <SocialLoginPresenter loginCallback={this.loginCallback} />
               );
             }}
-          </LoginMutation>
+          </Mutation>
         )}
       </Mutation>
     );

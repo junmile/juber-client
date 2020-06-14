@@ -2,8 +2,8 @@ import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import {
   updateProfile,
-  updateProfileVariables,
   userProfile,
+  updateProfileVariables,
 } from '../../types/api';
 import { RouteComponentProps } from 'react-router-dom';
 import { UPDATE_PROFILE } from './EditAccountQueries';
@@ -11,11 +11,6 @@ import EditAccountPresenter from './EditAccountPresenter';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
-class UpdateProfileMutation extends Mutation<
-  updateProfile,
-  updateProfileVariables
-> {}
 
 interface IProps extends RouteComponentProps<any> {}
 
@@ -27,8 +22,6 @@ interface IState {
   uploading: boolean;
   file?: Blob;
 }
-
-class ProfileQuery extends Query<userProfile> {}
 
 class EditAccountContainer extends React.Component<IProps, IState> {
   public state = {
@@ -42,13 +35,13 @@ class EditAccountContainer extends React.Component<IProps, IState> {
   public render() {
     const { email, firstName, lastName, profilePhoto, uploading } = this.state;
     return (
-      <ProfileQuery
+      <Query<userProfile>
         query={USER_PROFILE}
         onCompleted={this.updateFields}
         fetchPolicy={'no-cache'}
       >
         {() => (
-          <UpdateProfileMutation
+          <Mutation<updateProfile, updateProfileVariables>
             mutation={UPDATE_PROFILE}
             refetchQueries={[{ query: USER_PROFILE }]}
             variables={{
@@ -78,9 +71,9 @@ class EditAccountContainer extends React.Component<IProps, IState> {
                 uploading={uploading}
               />
             )}
-          </UpdateProfileMutation>
+          </Mutation>
         )}
-      </ProfileQuery>
+      </Query>
     );
   }
   public onInputChange: React.ChangeEventHandler<HTMLInputElement> = async (

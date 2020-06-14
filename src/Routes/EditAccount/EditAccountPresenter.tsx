@@ -1,5 +1,4 @@
 import React from 'react';
-import { MutationFn } from 'react-apollo';
 import Helmet from 'react-helmet';
 import styled from '../../typed-components';
 
@@ -8,7 +7,6 @@ import Form from '../../Components/Form';
 import Header from '../../Components/Header';
 import Input from '../../Components/Input';
 import PhotoInput from '../../Components/PhotoInput';
-import { updateProfileVariables, updateProfile } from '../../types/api';
 
 const Container = styled.div``;
 
@@ -27,7 +25,7 @@ interface IProps {
   profilePhoto: string;
   onInputChange: any;
   loading: boolean;
-  onSubmit: MutationFn<updateProfile, updateProfileVariables>;
+  onSubmit: any;
   uploading: boolean;
 }
 
@@ -39,7 +37,6 @@ const EditAccountPresenter: React.SFC<IProps> = ({
   onInputChange,
   loading,
   onSubmit,
-  uploading,
 }) => (
   <Container>
     <Helmet>

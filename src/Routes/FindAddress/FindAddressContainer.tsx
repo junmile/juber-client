@@ -140,7 +140,7 @@ class FindAddressContainer extends React.Component<IProps, IState> {
   };
 
   public enter = (event) => {
-    if (event.keyCode === 'enter') {
+    if (event.keyCode === 13) {
       this.onPickPlace();
     }
   };

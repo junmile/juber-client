@@ -1,9 +1,8 @@
 import React from 'react';
-import { MutationFn } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Button from '../../Components/Button';
 import styled from '../../typed-components';
-import { getRide, userProfile, updateRide } from '../../types/api';
+import { getRide, userProfile } from '../../types/api';
 import basicProfile from '../../images/basicProfile.png';
 
 const Container = styled.div`
@@ -49,7 +48,7 @@ interface IProps {
   data?: getRide;
   userData?: userProfile;
   loading: boolean;
-  updateRideFn: MutationFn<updateRide, any>;
+  updateRideFn: any;
 }
 
 const RidePresenter: React.SFC<IProps> = ({
@@ -119,11 +118,13 @@ const RidePresenter: React.SFC<IProps> = ({
               />
             )}
             {ride.driver.id === user.id ||
-              (ride.passenger.id === user.id && ride.status === 'ACCEPTED' && (
-                <Link to={`/chat/${ride.chatId}`}>
-                  <ExtendedButton value={'Chat'} onClick={null} />
-                </Link>
-              ))}
+              (ride.passenger.id === user.id &&
+                ride.status === 'ACCEPTED' &&
+                ride.chatId !== null && (
+                  <Link to={`/chat/${ride.chatId}`}>
+                    <ExtendedButton value={'Chat'} onClick={null} />
+                  </Link>
+                ))}
           </Buttons>
         )}
       </React.Fragment>

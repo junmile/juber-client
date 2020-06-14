@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost';
 
 export const GET_CHAT = gql`
-  query getChat($chatId: Int!) {
-    GetChat(chatId: $chatId) {
+  query getChat($type: String!, $id: Int!) {
+    GetChat(type: $type, id: $id) {
       ok
       error
       chat {

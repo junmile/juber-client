@@ -1,5 +1,4 @@
 import React from 'react';
-import { MutationFn } from 'react-apollo';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Header from '../../Components/Header';
@@ -12,8 +11,9 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  height: 60px;
-  width: 60px;
+  object-fit: cover;
+  height: 90px;
+  width: 90px;
   border-radius: 50%;
 `;
 
@@ -24,7 +24,9 @@ const GridLink = styled(Link)`
   margin-bottom: 10px;
 `;
 
-const Keys = styled.div``;
+const Keys = styled.div`
+  margin-top: auto;
+`;
 
 const Key = styled.span`
   display: block;
@@ -43,7 +45,7 @@ const SLink = styled(Link)`
 `;
 
 interface IProps {
-  logUserOut: MutationFn;
+  logUserOut: any;
   userData?: userProfile;
   placesData?: getPlaces;
   userDataLoading: boolean;

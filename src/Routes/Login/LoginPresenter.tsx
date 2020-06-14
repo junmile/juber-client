@@ -53,14 +53,21 @@ const Grey = styled.span`
 `;
 
 const SocialLogin = styled.div`
-  padding: 30px 20px;
+  padding: 10px 0px;
 `;
 
 const SocialLink = styled.span`
   color: ${(props) => props.theme.blueColor};
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
 `;
+
+const EmailLink = styled.span`
+  color: ${(props) => props.theme.blueColor};
+  font-size: 16px;
+  cursor: pointer;
+`;
+
 const Background = styled.div`
   color: #4a4a4a;
   height: 100%;
@@ -80,6 +87,10 @@ const Body = styled.div`
   width: 400px;
 `;
 
+const EmailLogin = styled.div`
+  padding: 10px 0px;
+`;
+
 interface IProps extends RouteComponentProps<any> {}
 
 const OutHomePresenter: React.SFC<IProps> = () => (
@@ -95,18 +106,23 @@ const OutHomePresenter: React.SFC<IProps> = () => (
         <Footer>
           <Link to={'/phone-login'}>
             <PhoneLogin>
-              <Subtitle>Get moving with Juber</Subtitle>
+              <Subtitle>JUBER와 함께하세요</Subtitle>
               <FakeInput>
                 <span role="img" aria-label="">
                   🇰🇷 +82
                 </span>
-                <Grey>Enter your mobile number</Grey>
+                <Grey>핸드폰 번호를 입력하세요.</Grey>
               </FakeInput>
             </PhoneLogin>
           </Link>
+          <Link to={'/email-login'}>
+            <EmailLogin>
+              <EmailLink>기존 이메일로 로그인</EmailLink>
+            </EmailLogin>
+          </Link>
           <Link to={'/social-login'}>
             <SocialLogin>
-              <SocialLink>Or connect with social</SocialLink>
+              <SocialLink>페이스북으로 로그인</SocialLink>
             </SocialLogin>
           </Link>
         </Footer>

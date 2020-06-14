@@ -4,7 +4,7 @@ import BackArrow from '../BackArrow';
 
 const Container = styled.header`
   background-color: #fcc159;
-  margin-bottom: 30px;
+  margin-bottom: 2px;
   color: white;
   display: flex;
   height: 50px;
@@ -18,7 +18,7 @@ const Container = styled.header`
   padding: 0 10px;
 `;
 
-const Title = styled.h2`\
+const Title = styled.h2`
   margin-left: 10px;
 `;
 

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from '../../typed-components';
-import { userProfile, toggleDriving } from '../../types/api';
+import { userProfile } from '../../types/api';
 
 const Container = styled.div`
   height: 100%;
 `;
 
 const Header = styled.div`
-  background-color: black;
   height: 20%;
   margin-bottom: 30px;
   padding: 0 15px;
@@ -24,17 +23,18 @@ const SLink = styled(Link)`
 `;
 
 const Image = styled.img`
-  height: 80px;
-  width: 80px;
+  height: 100px;
+  width: 100px;
   background-color: grey;
-  border-radius: 40px;
+  border-radius: 100px;
   overflow: hidden;
   object-fit: cover;
 `;
 
 const Name = styled.h2`
   font-size: 22px;
-  color: white;
+  margin-top: auto;
+  color: black;
   margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -47,6 +47,7 @@ const Rating = styled.h5`
 `;
 
 const Text = styled.span`
+  margin-top: auto;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -107,8 +108,9 @@ const MenuPresenter: React.SFC<IProps> = ({
             </Text>
           </Grid>
         </Header>
-        <SLink to="/trips">Your Trips</SLink>
-        <SLink to="/settings">Settings</SLink>
+
+        <SLink to="/settings">내 정보</SLink>
+        <SLink to="/edit-account">내 정보 변경</SLink>
         <ToggleDriving onClick={toggleDrivingFn} isDriving={user.isDriving}>
           {user.isDriving ? 'Stop driving' : 'Start driving'}
         </ToggleDriving>

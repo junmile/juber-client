@@ -5,15 +5,7 @@ import Menu from '../../Components/Menu';
 import styled from '../../typed-components';
 import Button from '../../Components/Button';
 import AddressBar from '../../Components/App/AddressBar';
-import {
-  userProfile,
-  requestRide,
-  requestRideVariables,
-  getNearbyRides,
-  acceptRide,
-  acceptRideVariables,
-} from '../../types/api';
-import { MutationFn } from 'react-apollo';
+import { userProfile, getNearbyRides } from '../../types/api';
 import RidePopUp from '../../Components/RidePopUp';
 
 const Container = styled.div``;
@@ -40,11 +32,12 @@ const ExtendedButton = styled(Button)`
   left: 0;
   right: 0;
   margin: auto;
-  z-index: 10;
+  z-index: 2;
   height: auto;
   width: 80%;
 `;
 const RequestButton = styled(ExtendedButton)`
+  z-index: 2;
   bottom: 7rem;
 `;
 
@@ -63,9 +56,9 @@ interface IProps {
   onAddressSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
   price?: number;
   data?: userProfile;
-  requestRideFn?: MutationFn<requestRide, requestRideVariables>;
+  requestRideFn?: any;
   getNearbyRide?: getNearbyRides | any;
-  acceptRideFn: MutationFn<acceptRide, acceptRideVariables> | any;
+  acceptRideFn: any;
   enter: any;
 }
 
