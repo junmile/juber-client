@@ -17,7 +17,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   color: white;
-  text-weight: bold;
+  font-weight: bold;
   font-size: 30px;
   text-align: center;
 `;
@@ -44,7 +44,7 @@ const FakeInput = styled.div`
 
 const PhoneLogin = styled.div`
   cursor: pointer;
-  height: 400px;
+  height: 150px;
 `;
 
 const Grey = styled.span`
@@ -90,6 +90,18 @@ const Body = styled.div`
 const EmailLogin = styled.div`
   padding: 10px 0px;
 `;
+const SignUpLink = styled.span`
+  > * {
+    color: ${(props) => props.theme.blueColor};
+    font-weight: bold;
+  }
+`;
+
+const SignUp = styled.div`
+  height: 300px;
+  padding: 10px 0;
+  font-size: 16px;
+`;
 
 interface IProps extends RouteComponentProps<any> {}
 
@@ -115,6 +127,12 @@ const OutHomePresenter: React.SFC<IProps> = () => (
               </FakeInput>
             </PhoneLogin>
           </Link>
+          <SignUp>
+            <SignUpLink>
+              회원이 아니신가요?
+              <Link to={'/sign-up'}> 가입하기</Link>
+            </SignUpLink>
+          </SignUp>
           <Link to={'/email-login'}>
             <EmailLogin>
               <EmailLink>기존 이메일로 로그인</EmailLink>

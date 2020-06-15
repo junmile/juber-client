@@ -534,6 +534,36 @@ export interface updateRideVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: emailVerification
+// ====================================================
+
+export interface emailVerification_EmailSignUp {
+  __typename: "EmailSignUpResponse";
+  ok: boolean;
+  error: string | null;
+  token: string | null;
+}
+
+export interface emailVerification {
+  EmailSignUp: emailVerification_EmailSignUp | null;
+}
+
+export interface emailVerificationVariables {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  profilePhoto: string;
+  age: number;
+  phoneNumber: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: facebookConnect
 // ====================================================
 

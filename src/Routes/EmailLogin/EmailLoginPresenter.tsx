@@ -8,9 +8,17 @@ import Form from '../../Components/Form';
 const Container = styled.div`
   margin-top: 30px;
   padding: 50px 20px;
+  width: 100%;
+  display: flex;
 `;
 
-const InputCont = styled.div``;
+const InputCont = styled.div`
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+`;
 
 const HiddenSubmit = styled.input`
   display: none;
@@ -35,6 +43,7 @@ interface IProps {
   passwordValue: string;
   onPasswordInputChange: any;
   emailLoginFn: any;
+  logInFn: any;
 }
 
 const EmailLoginPresenter: React.SFC<IProps> = ({
@@ -43,41 +52,39 @@ const EmailLoginPresenter: React.SFC<IProps> = ({
   passwordValue,
   onPasswordInputChange,
   emailLoginFn,
+  logInFn,
 }) => (
   <Container>
     <Helmet>
       <title>Email Login | Number</title>
     </Helmet>
     <BackArrowExtended backTo={'/'} />
-    <React.Fragment>
+    <InputCont>
       <Title>로그인을 위해 이메일주소를 입력해 주세요.</Title>
-      <InputCont>
-        <Form
-          submitFn={() => {
-            console.log('ㄹㄴㅁㅇ항나');
-            emailLoginFn({
-              variables: { email: emailValue, password: passwordValue },
-            });
-          }}
-        >
-          <Input
-            type={'input'}
-            name={'email'}
-            value={emailValue}
-            onChange={(e) => onEmailInputChange(e.target.value)}
-            placeholder={'ex) @gamil.com'}
-          />
-          <Input
-            type={'password'}
-            name={'password'}
-            value={passwordValue}
-            onChange={(e) => onPasswordInputChange(e.target.value)}
-            placeholder={'password'}
-          />
-          <HiddenSubmit type={'submit'} />
-        </Form>
-      </InputCont>
-    </React.Fragment>
+      <Form
+        submitFn={() => {
+          emailLoginFn({
+            variables: { email: emailValue, password: passwordValue },
+          });
+        }}
+      >
+        <Input
+          type={'input'}
+          name={'email'}
+          value={emailValue}
+          onChange={(e) => onEmailInputChange(e.target.value)}
+          placeholder={'ex) @gamil.com'}
+        />
+        <Input
+          type={'password'}
+          name={'password'}
+          value={passwordValue}
+          onChange={(e) => onPasswordInputChange(e.target.value)}
+          placeholder={'password'}
+        />
+        <HiddenSubmit type={'submit'} />
+      </Form>
+    </InputCont>
   </Container>
 );
 
