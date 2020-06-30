@@ -11,6 +11,8 @@ const Container = styled.div`
   padding: 40px;
 `;
 
+const FormCont = styled.div``;
+
 const ExtendedInput = styled(Input)`
   margin-bottom: 40px;
 `;
@@ -20,6 +22,8 @@ const ExtendedLink = styled(Link)`
   margin-bottom: 20px;
   display: block;
 `;
+
+const SubmitInput = styled(Button)``;
 
 interface IProps {
   setTitle: any;
@@ -48,7 +52,7 @@ const AddPlacePresenter: React.SFC<IProps> = ({
     </Helmet>
     <Header title={'나의 장소 추가'} backTo={'/'} />
     <Container>
-      <Form submitFn={onSubmit}>
+      <FormCont>
         <ExtendedInput
           placeholder={'이름'}
           name={'name'}
@@ -66,12 +70,13 @@ const AddPlacePresenter: React.SFC<IProps> = ({
         />
         <ExtendedLink to={'/find-address'}>지도에서 장소 선택</ExtendedLink>
         {(pickedAddress || address !== '') && (
-          <Button
+          <SubmitInput
+            type={'submit'}
             onClick={onSubmit}
             value={!loading ? '장소 추가' : '장소 추가중'}
           />
         )}
-      </Form>
+      </FormCont>
     </Container>
   </React.Fragment>
 );

@@ -10,12 +10,19 @@ const AddPlaceContainer = (props) => {
   console.log('props : ', props);
 
   const { state = {} } = props.location;
-  const [correctAddress, setCorretAddress] = useState(false);
+  const [correctAddress, setCorrectAddress] = useState(false);
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState(state.address || '');
+  const [codedAddress, setCodedAddress] = useState('');
 
   useEffect(() => {
-    setCorretAddress(false);
+    setCorrectAddress(false);
+    if (state.address !== null) {
+      setCorrectAddress(true);
+    }
+    if (codedAddress === address) {
+      setCorrectAddress(true);
+    }
   }, [address]);
 
   const [lat, setLat] = useState<number>(state.lat || 0);
@@ -42,7 +49,8 @@ const AddPlaceContainer = (props) => {
       if (event.target.name === 'address') {
         const result = await geoCode(address);
         if (result) {
-          setCorretAddress(true);
+          setCorrectAddress(true);
+          setCodedAddress(result.formatted_address);
           setAddress(result.formatted_address);
           setLat(result.lat);
           setLng(result.lng);

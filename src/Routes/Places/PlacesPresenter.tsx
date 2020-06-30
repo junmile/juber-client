@@ -10,6 +10,10 @@ const Container = styled.div`
   padding: 40px;
 `;
 
+const BooleanDiv = styled.div`
+  margin-bottom: 40px;
+`;
+
 const SLink = styled(Link)`
   margin-top: 20px;
   text-decoration: underline;
@@ -33,7 +37,9 @@ const PlacePresenter: React.SFC<IProps> = ({
     </Helmet>
     <Header title={'나의 장소'} backTo={'/'} />
     <Container>
-      {!loading && places && places.length === 0 && '등록된 장소가 없습니다.'}
+      {!loading && places && places.length === 0 && (
+        <BooleanDiv>'등록된 장소가 없습니다.'</BooleanDiv>
+      )}
       {!loading &&
         places &&
         places.map((place) => (

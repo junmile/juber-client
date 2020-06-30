@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from '../../typed-components';
+import heart2 from '../../images/heart2.png';
+import heart1 from '../../images/heart1.png';
 
 const Place = styled.div`
   margin: 15px 0;
@@ -21,6 +23,9 @@ const Name = styled.span`
 const Icon = styled.span`
   cursor: pointer;
 `;
+const Heart = styled.img`
+  width: 20px;
+`;
 
 const Address = styled.span`
   color: ${(props) => props.theme.greyColor};
@@ -41,7 +46,9 @@ const PlacePresenter: React.SFC<IProps> = ({
   address,
 }) => (
   <Place>
-    <Icon onClick={onStarPress as any}>{fav ? '★' : '✩'}</Icon>
+    <Icon onClick={onStarPress as any}>
+      {fav ? <Heart src={heart1} /> : <Heart src={heart2} />}
+    </Icon>
     <Container>
       <Name>{name}</Name>
       <Address>{address}</Address>
