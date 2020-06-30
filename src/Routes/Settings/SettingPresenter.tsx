@@ -5,6 +5,8 @@ import Header from '../../Components/Header';
 import Place from '../../Components/Place';
 import styled from '../../typed-components';
 import { getPlaces, userProfile } from '../../types/api';
+import basicProfilePhoto from '../../images/basicProfileStart_1.png';
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
   padding: 40px;
@@ -63,22 +65,19 @@ const SettingsPresenter: React.SFC<IProps> = ({
     <Helmet>
       <title>Settings | Juber</title>
     </Helmet>
-    <Header title={'Account Settings'} backTo={'/'} />
+    <Header title={'계정 설정'} backTo={'/'} />
     <Container>
       <GridLink to={'/edit-account'}>
-        {!userDataLoading &&
-          user &&
-          user.profilePhoto &&
-          user.email &&
-          user.fullName && (
-            <React.Fragment>
-              <Image src={user.profilePhoto} />
-              <Keys>
-                <Key>{user.fullName}</Key>
-                <Key>{user.email}</Key>
-              </Keys>
-            </React.Fragment>
-          )}
+        {!userDataLoading && user && user.email && user.fullName && (
+          <React.Fragment>
+            {user.profilePhoto && <Image src={user.profilePhoto} />}
+            {user.profilePhoto === null && <Image src={basicProfilePhoto} />}
+            <Keys>
+              <Key>{user.fullName}</Key>
+              <Key>{user.email}</Key>
+            </Keys>
+          </React.Fragment>
+        )}
       </GridLink>
       {!placesLoading &&
         places &&
@@ -91,8 +90,15 @@ const SettingsPresenter: React.SFC<IProps> = ({
             address={place!.address}
           />
         ))}
-      <SLink to={'/places'}>Go to Places</SLink>
-      <FakeLink onClick={logUserOut as any}>Log Out</FakeLink>
+      <SLink to={'/places'}>자주가는 주소</SLink>
+      <FakeLink
+        onClick={() => {
+          logUserOut();
+          toast.success('로그아웃 되었습니다.');
+        }}
+      >
+        로그아웃
+      </FakeLink>
     </Container>
   </React.Fragment>
 );

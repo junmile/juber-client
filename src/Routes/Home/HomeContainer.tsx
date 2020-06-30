@@ -66,7 +66,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     isMenuOpen: false,
     lat: 0,
     lng: 0,
-    toAddress: '대한민국 서울특별시 마포구 상수동 와우산로 94',
+    toAddress: '',
     toLat: 0,
     toLng: 0,
     distance: '',
@@ -86,7 +86,8 @@ class HomeContainer extends React.Component<IProps, IState> {
     //position을 관찰할 예정, geolocation을 통해 반환된 position값으로 this.handleGeoSuccess 실행
     navigator.geolocation.getCurrentPosition(
       this.handleGeoSuccess,
-      this.handleGeoError
+      this.handleGeoError,
+      { maximumAge: 60000, timeout: 10000, enableHighAccuracy: true }
     );
   }
 
@@ -114,7 +115,6 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public getFromAddress = async (lat: number, lng: number) => {
     const address = await reverseGeoCode(lat, lng);
-    console.log('getForomAddress : ', address);
     if (address) {
       this.setState({
         fromAddress: address,

@@ -78,7 +78,7 @@ const HomePresenter: React.SFC<IProps> = ({
 }) => (
   <Container>
     <Helmet>
-      <title>Home | Number</title>
+      <title>Home | Juber</title>
     </Helmet>
     <Sidebar
       sidebar={<Menu />}
@@ -88,6 +88,7 @@ const HomePresenter: React.SFC<IProps> = ({
         sidebar: {
           backgroundColor: 'white',
           width: '80%',
+          maxWidth: '500px',
           zIndex: '10',
         },
       }}
@@ -97,7 +98,7 @@ const HomePresenter: React.SFC<IProps> = ({
         <React.Fragment>
           <AddressBar
             name={'toAddress'}
-            onChange={onInputChange}
+            onChangeFn={onInputChange}
             value={toAddress}
             onBlur={null}
             enter={enter}
@@ -105,7 +106,7 @@ const HomePresenter: React.SFC<IProps> = ({
           <ExtendedButton
             onClick={onAddressSubmit}
             disabled={toAddress === ''}
-            value={price ? 'Change Address' : 'Pick Address'}
+            value={price ? '주소 재선택' : '주소 선택'}
           />
         </React.Fragment>
       )}
@@ -113,7 +114,7 @@ const HomePresenter: React.SFC<IProps> = ({
         <RequestButton
           onClick={requestRideFn}
           disabled={toAddress === ''}
-          value={`Request Ride (${price}원)`}
+          value={`JUBER 요청 (${price}원)`}
         />
       )}
       {ride && (

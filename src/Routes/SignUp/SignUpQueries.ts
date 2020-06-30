@@ -6,7 +6,6 @@ export const EMAIL_VERIFICATION = gql`
     $lastName: String!
     $email: String!
     $password: String!
-    $profilePhoto: String!
     $age: Int!
     $phoneNumber: String!
   ) {
@@ -15,13 +14,28 @@ export const EMAIL_VERIFICATION = gql`
       lastName: $lastName
       email: $email
       password: $password
-      profilePhoto: $profilePhoto
       age: $age
       phoneNumber: $phoneNumber
     ) {
       ok
       error
       token
+    }
+  }
+`;
+
+export const REGISTRATION_CHECK = gql`
+  query registrationCheck(
+    $type: String!
+    $phoneNumber: String
+    $email: String
+  ) {
+    RegistrationCheck(type: $type, phoneNumber: $phoneNumber, email: $email) {
+      ok
+      error
+      user {
+        createdAt
+      }
     }
   }
 `;

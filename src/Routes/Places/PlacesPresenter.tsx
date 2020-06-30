@@ -31,7 +31,7 @@ const PlacePresenter: React.SFC<IProps> = ({
     <Helmet>
       <title>Places | Number</title>
     </Helmet>
-    <Header title={'Places'} backTo={'/'} />
+    <Header title={'나의 장소'} backTo={'/'} />
     <Container>
       {!loading && places && places.length === 0 && '등록된 장소가 없습니다.'}
       {!loading &&

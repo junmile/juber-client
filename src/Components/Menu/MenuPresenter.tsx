@@ -2,20 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from '../../typed-components';
 import { userProfile } from '../../types/api';
+import basicProfile from '../../images/basicProfileStart_1.png';
 
 const Container = styled.div`
   height: 100%;
 `;
 
 const Header = styled.div`
-  height: 20%;
+  height: 150px;
   margin-bottom: 30px;
   padding: 0 15px;
   color: white;
 `;
 
 const SLink = styled(Link)`
-  font-size: 22px;
+  font-size: 18px;
   display: block;
   margin-left: 15px;
   margin-bottom: 25px;
@@ -25,7 +26,7 @@ const SLink = styled(Link)`
 const Image = styled.img`
   height: 100px;
   width: 100px;
-  background-color: grey;
+  background-color: white;
   border-radius: 100px;
   overflow: hidden;
   object-fit: cover;
@@ -35,7 +36,6 @@ const Name = styled.h2`
   font-size: 22px;
   margin-top: auto;
   color: black;
-  margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -43,27 +43,35 @@ const Name = styled.h2`
 
 const Rating = styled.h5`
   font-size: 18px;
-  color: white;
+  color: ${(props) => props.theme.yellowColor};
 `;
 
 const Text = styled.span`
-  margin-top: auto;
+  line-height: 40px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 `;
 
 const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-gap: 10px;
-  height: 100%;
-  align-items: center;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 150px;
+`;
+const Title = styled.div`
+  width: 100%;
+  background-color: ${(props) => props.theme.yellowColor};
+  height: 200px;
+  text-align: center;
 `;
 
-interface IToggleProps {
-  isDriving: boolean;
-}
+const Juber = styled.div`
+  padding-top: 70px;
+  font-size: 32px;
+  color: white;
+`;
 
 const ToggleDriving = styled<IToggleProps, any>('button')`
   -webkit-appearance: none;
@@ -76,6 +84,10 @@ const ToggleDriving = styled<IToggleProps, any>('button')`
   padding: 15px 0px;
   cursor: pointer;
 `;
+
+interface IToggleProps {
+  isDriving: boolean;
+}
 
 interface IProps {
   data?: userProfile;
@@ -91,15 +103,13 @@ const MenuPresenter: React.SFC<IProps> = ({
   <Container>
     {!loading && user && user.fullName && (
       <React.Fragment>
+        <Title>
+          <Juber>JUBER</Juber>
+        </Title>
         <Header>
           <Grid>
             <Link to={'/edit-account'}>
-              <Image
-                src={
-                  user.profilePhoto ||
-                  'https://lh3.googleusercontent.com/-CTwXMuZRaWw/AAAAAAAAAAI/AAAAAAAAAUg/8T5nFuIdnHE/photo.jpg'
-                }
-              />
+              <Image src={user.profilePhoto || basicProfile} />
             </Link>
 
             <Text>
@@ -112,7 +122,7 @@ const MenuPresenter: React.SFC<IProps> = ({
         <SLink to="/settings">내 정보</SLink>
         <SLink to="/edit-account">내 정보 변경</SLink>
         <ToggleDriving onClick={toggleDrivingFn} isDriving={user.isDriving}>
-          {user.isDriving ? 'Stop driving' : 'Start driving'}
+          {user.isDriving ? '운전 중지' : '운전 시작'}
         </ToggleDriving>
       </React.Fragment>
     )}

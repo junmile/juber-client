@@ -35,6 +35,7 @@ interface IProps {
   value?: string;
   name?: string;
   onChange?: any;
+  enter?: any;
 }
 
 const Input: React.SFC<IProps> = ({
@@ -44,8 +45,10 @@ const Input: React.SFC<IProps> = ({
   value,
   name = '',
   onChange,
+  enter,
 }) => (
   <Container
+    onKeyDown={enter}
     name={name}
     type={type}
     required={required}

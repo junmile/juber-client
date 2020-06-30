@@ -73,14 +73,14 @@ const EmailLoginPresenter: React.SFC<IProps> = ({
           name={'email'}
           value={emailValue}
           onChange={(e) => onEmailInputChange(e.target.value)}
-          placeholder={'ex) @gamil.com'}
+          placeholder={'이메일 입력 ex) @gamil.com'}
         />
         <Input
           type={'password'}
           name={'password'}
           value={passwordValue}
           onChange={(e) => onPasswordInputChange(e.target.value)}
-          placeholder={'password'}
+          placeholder={'비밀번호'}
         />
         <HiddenSubmit type={'submit'} />
       </Form>

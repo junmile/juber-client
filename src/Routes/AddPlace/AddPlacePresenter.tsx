@@ -22,48 +22,53 @@ const ExtendedLink = styled(Link)`
 `;
 
 interface IProps {
+  setTitle: any;
+  setAddress: any;
   address: string;
-  name: string;
-  onInputChange: (event: React.ChangeEventHandler<HTMLInputElement>) => void;
+  title: string;
   loading: any;
   onSubmit: any;
   pickedAddress: boolean;
+  enterFn: any;
 }
 
 const AddPlacePresenter: React.SFC<IProps> = ({
+  setTitle,
+  setAddress,
   address,
-  name,
-  onInputChange,
+  title,
   loading,
   onSubmit,
   pickedAddress,
+  enterFn,
 }) => (
   <React.Fragment>
     <Helmet>
       <title>Add Place | Juber</title>
     </Helmet>
-    <Header title={'Add Place'} backTo={'/'} />
+    <Header title={'나의 장소 추가'} backTo={'/'} />
     <Container>
       <Form submitFn={onSubmit}>
         <ExtendedInput
           placeholder={'이름'}
           name={'name'}
           type={'text'}
-          onChange={onInputChange}
-          value={name}
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
         />
         <ExtendedInput
           placeholder={'주소'}
           name={'address'}
           type={'text'}
-          onChange={onInputChange}
+          onChange={(e) => setAddress(e.target.value)}
           value={address}
+          enter={enterFn}
         />
         <ExtendedLink to={'/find-address'}>지도에서 장소 선택</ExtendedLink>
-        {pickedAddress && (
+        {(pickedAddress || address !== '') && (
           <Button
             onClick={onSubmit}
-            value={loading ? '장소 추가' : '장소 추가중'}
+            value={!loading ? '장소 추가' : '장소 추가중'}
           />
         )}
       </Form>

@@ -553,9 +553,39 @@ export interface emailVerificationVariables {
   lastName: string;
   email: string;
   password: string;
-  profilePhoto: string;
   age: number;
   phoneNumber: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: registrationCheck
+// ====================================================
+
+export interface registrationCheck_RegistrationCheck_user {
+  __typename: "User";
+  createdAt: string;
+}
+
+export interface registrationCheck_RegistrationCheck {
+  __typename: "RegistrationCheckResponse";
+  ok: boolean;
+  error: string | null;
+  user: registrationCheck_RegistrationCheck_user | null;
+}
+
+export interface registrationCheck {
+  RegistrationCheck: registrationCheck_RegistrationCheck;
+}
+
+export interface registrationCheckVariables {
+  type: string;
+  phoneNumber?: string | null;
+  email?: string | null;
 }
 
 /* tslint:disable */

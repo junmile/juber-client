@@ -6,7 +6,7 @@ const Container = styled.input`
   background-color: white;
   border-radius: 5px;
   -webkit-appearance: none;
-  z-index: 2;
+  z-index: 5;
   width: 80%;
   border: 0;
   font-size: 16px;
@@ -24,13 +24,13 @@ interface IProps {
   onBlur: any;
   name: string;
   enter: any;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeFn: any;
 }
 
 const AddressBar: React.SFC<IProps> = ({
   value,
   onBlur,
-  onChange,
+  onChangeFn,
   name,
   enter,
 }) => (
@@ -38,9 +38,9 @@ const AddressBar: React.SFC<IProps> = ({
     onKeyDown={enter}
     value={value}
     onBlur={onBlur}
-    onChange={onChange}
+    onChange={(e) => onChangeFn(e.target.value)}
     onSubmit={onBlur}
-    placeholder={'Type address'}
+    placeholder={'목적지를 검색해 주세요.'}
     name={name}
   />
 );

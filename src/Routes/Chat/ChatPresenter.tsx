@@ -45,7 +45,7 @@ const ChatPresenter: React.SFC<IProps> = ({
   chatId,
 }) => (
   <Container>
-    <Header title={'Chat'} />
+    <Header title={'JUBER 채팅'} />
     {!loading && chat && user && (
       <React.Fragment>
         <Chat>
@@ -66,7 +66,6 @@ const ChatPresenter: React.SFC<IProps> = ({
         <InputCont>
           <Form
             submitFn={() => {
-              console.log('ㄻㄴ앟ㅁㄴㅇ라');
               sendMessageFn({
                 variables: {
                   text: messageText,
@@ -78,7 +77,7 @@ const ChatPresenter: React.SFC<IProps> = ({
           >
             <Input
               value={messageText}
-              placeholder={'Type your message'}
+              placeholder={'메세지를 입력해 주세요.'}
               onChange={(e) => {
                 onInputChange(e.target.value);
               }}

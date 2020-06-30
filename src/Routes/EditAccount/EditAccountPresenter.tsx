@@ -8,6 +8,8 @@ import Header from '../../Components/Header';
 import Input from '../../Components/Input';
 import PhotoInput from '../../Components/PhotoInput';
 
+import basicProfilePhoto from '../../images/basicProfileStart_1.png';
+
 const Container = styled.div``;
 
 const ExtendedForm = styled(Form)`
@@ -42,25 +44,34 @@ const EditAccountPresenter: React.SFC<IProps> = ({
     <Helmet>
       <title>Edit Account | Number</title>
     </Helmet>
-    <Header title={'Edit Account'} backTo={'/'} />
+    <Header title={'내 정보 변경'} backTo={'/'} />
     <ExtendedForm submitFn={onSubmit}>
-      <PhotoInput
-        uploading={false}
-        fileUrl={profilePhoto}
-        onChange={onInputChange}
-      />
+      {profilePhoto && (
+        <PhotoInput
+          uploading={false}
+          fileUrl={profilePhoto}
+          onChange={onInputChange}
+        />
+      )}
+      {profilePhoto === null && (
+        <PhotoInput
+          uploading={false}
+          fileUrl={basicProfilePhoto}
+          onChange={onInputChange}
+        />
+      )}
       <ExtendedInput
         type="text"
         name="firstName"
         value={firstName}
-        placeholder={'First Name'}
+        placeholder={'이름'}
         onChange={onInputChange}
       />
       <ExtendedInput
         type="text"
         name="lastName"
         value={lastName}
-        placeholder={'Last Name'}
+        placeholder={'성'}
         onChange={onInputChange}
       />
       <ExtendedInput

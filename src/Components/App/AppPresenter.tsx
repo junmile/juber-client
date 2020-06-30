@@ -33,8 +33,7 @@ const LoggedOutRoutes: React.SFC = () => (
     <Route path={'/verify-phone'} component={VerifyPhone} />
     <Route path={'/social-login'} component={SocialLogin} />
     <Route path={'/email-login'} component={EmailLogin} />
-    <Route path={'/sign_up'} component={SignUp} />
-
+    <Route path={'/sign-up'} component={SignUp} />
     <Redirect from={'*'} to={'/'} />
   </Switch>
 );

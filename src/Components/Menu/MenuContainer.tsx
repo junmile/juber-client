@@ -1,38 +1,25 @@
 import React from 'react';
 import MenuPresenter from './MenuPresenter';
 import { useMutation, useQuery } from 'react-apollo';
-import {
-  userProfile,
-  toggleDriving,
-  getRide,
-  getNearbyDrivers,
-  getNearbyRides,
-} from '../../types/api';
+import { userProfile, toggleDriving, getNearbyDrivers } from '../../types/api';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import TOGGLE_DRIVING from './MenuQueries';
 import { toast } from 'react-toastify';
-import { GET_RIDE } from '../../Routes/Ride/RideQueries';
-import {
-  GET_NEARBY_DRIVERS,
-  GET_NEARBY_RIDE,
-} from '../../Routes/Home/HomeQueries';
+import { GET_NEARBY_DRIVERS } from '../../Routes/Home/HomeQueries';
 
 const MenuContainer: React.FC = () => {
   const [toggleDrivingMutation] = useMutation<toggleDriving>(TOGGLE_DRIVING, {
     update(cache, { data }) {
       if (data) {
-        console.log('캐시 :', cache);
         const { ToggleDrivingMode } = data;
+        console.log('캐시 : ', cache);
+        console.log('데이타 : ', data);
         if (!ToggleDrivingMode.ok) {
           toast.error('상태를 바꿀수 없습니다.');
           return;
         }
         const query: userProfile | null = cache.readQuery({
           query: USER_PROFILE,
-        });
-
-        const rideQuery: getNearbyRides | null = cache.readQuery({
-          query: GET_NEARBY_RIDE,
         });
 
         const driverQuery: getNearbyDrivers | null = cache.readQuery({
@@ -43,11 +30,14 @@ const MenuContainer: React.FC = () => {
           const {
             GetMyProfile: { user },
           } = query;
+          console.log('user : ', user);
+
           if (user) {
+            console.log(user.isDriving);
             user.isDriving = !user.isDriving;
           }
         }
-        cache.writeQuery({ query: GET_NEARBY_RIDE, data: rideQuery });
+
         cache.writeQuery({ query: GET_NEARBY_DRIVERS, data: driverQuery });
 
         cache.writeQuery({ query: USER_PROFILE, data: query });

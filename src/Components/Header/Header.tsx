@@ -19,7 +19,7 @@ const Container = styled.header`
 `;
 
 const Title = styled.h2`
-  margin-left: 10px;
+  margin-left: 30px;
 `;
 
 interface IProps {

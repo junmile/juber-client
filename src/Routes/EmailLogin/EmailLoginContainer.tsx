@@ -17,6 +17,7 @@ const EmailLoginContainer: React.FC = () => {
       onCompleted(data) {
         if (data.EmailSignIn.token) {
           userLogInFn({ variables: { token: data.EmailSignIn.token } });
+          toast.success('JUBER로 오신것을 환영합니다.');
         } else {
           toast.error(data.EmailSignIn.error);
           setEmail('');

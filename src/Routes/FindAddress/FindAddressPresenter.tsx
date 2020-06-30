@@ -5,6 +5,10 @@ import AddressBar from '../../Components/App/AddressBar';
 import Button from '../../Components/Button';
 import arrow from '../../images/arrow.gif';
 
+const FindAddressAddressBar = styled(AddressBar)`
+  z-index: 10;
+`;
+
 const Map = styled.div`
   position: absolute;
   top: 0;
@@ -14,6 +18,7 @@ const Map = styled.div`
   z-index: 1;
 `;
 const Center = styled.div`
+  pointer-events: none;
   position: absolute;
   height: 100%;
   width: 100%;
@@ -56,40 +61,34 @@ interface IProps {
   mapRef: any;
   address: string;
   onInputBlur: () => void;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setAddress: any;
   onPickPlace: () => void;
 }
 
-class FindAddressPresenter extends React.Component<IProps> {
-  public render() {
-    const {
-      mapRef,
-      onInputBlur,
-      onInputChange,
-      address,
-      onPickPlace,
-      enter,
-    } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>Find Address | Juber</title>
-        </Helmet>
-        <AddressBar
-          enter={enter}
-          name={'address'}
-          value={address}
-          onBlur={onInputBlur}
-          onChange={onInputChange}
-        />
-        <ExtendedButton value={'Pick this place'} onClick={onPickPlace} />
-        <Center>
-          <Arrow src={arrow}></Arrow>
-        </Center>
-        <Map ref={mapRef} />
-      </div>
-    );
-  }
-}
-
+const FindAddressPresenter: React.SFC<IProps> = ({
+  mapRef,
+  onInputBlur,
+  setAddress,
+  address,
+  onPickPlace,
+  enter,
+}) => (
+  <div>
+    <Helmet>
+      <title>Find Address | Juber</title>
+    </Helmet>
+    <FindAddressAddressBar
+      enter={enter}
+      name={'address'}
+      value={address}
+      onBlur={onInputBlur}
+      onChangeFn={setAddress}
+    />
+    <ExtendedButton value={'장소 선택'} onClick={onPickPlace} />
+    <Map ref={mapRef} />
+    <Center>
+      <Arrow src={arrow}></Arrow>
+    </Center>
+  </div>
+);
 export default FindAddressPresenter;

@@ -52,8 +52,10 @@ class EditAccountContainer extends React.Component<IProps, IState> {
             }}
             onCompleted={(data) => {
               const { UpdateMyProfile } = data;
+              const { history } = this.props;
               if (UpdateMyProfile.ok) {
-                toast.success('프로필이 성공적으로 변경 되었습니다.');
+                toast.success('프로필 이미지가 성공적으로 변경 되었습니다.');
+                history.push('/');
               } else {
                 toast.error(UpdateMyProfile.error);
               }
@@ -83,6 +85,7 @@ class EditAccountContainer extends React.Component<IProps, IState> {
       target: { name, value, files },
     } = event;
     if (files) {
+      console.log(files[0]);
       this.setState({
         uploading: true,
       });

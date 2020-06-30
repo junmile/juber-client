@@ -93,7 +93,7 @@ const RidePresenter: React.SFC<IProps> = ({
           <Buttons>
             {ride.driver.id === user.id && ride.status === 'ACCEPTED' && (
               <ExtendedButton
-                value={'Picked Up'}
+                value={'승차'}
                 onClick={() =>
                   updateRideFn({
                     variables: {
@@ -106,7 +106,7 @@ const RidePresenter: React.SFC<IProps> = ({
             )}
             {ride.driver.id === user.id && ride.status === 'ONROUTE' && (
               <ExtendedButton
-                value={'Finished'}
+                value={'도착완료'}
                 onClick={() =>
                   updateRideFn({
                     variables: {
@@ -122,7 +122,7 @@ const RidePresenter: React.SFC<IProps> = ({
                 ride.status === 'ACCEPTED' &&
                 ride.chatId !== null && (
                   <Link to={`/chat/${ride.chatId}`}>
-                    <ExtendedButton value={'Chat'} onClick={null} />
+                    <ExtendedButton value={'채팅하기'} onClick={null} />
                   </Link>
                 ))}
           </Buttons>
