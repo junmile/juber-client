@@ -7,8 +7,6 @@ import { useMutation } from 'react-apollo';
 import { geoCode } from '../../mapHelpers';
 
 const AddPlaceContainer = (props) => {
-  console.log('props : ', props);
-
   const { state = {} } = props.location;
   const [correctAddress, setCorrectAddress] = useState(false);
   const [title, setTitle] = useState('');

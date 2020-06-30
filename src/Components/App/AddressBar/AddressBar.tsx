@@ -38,7 +38,7 @@ const AddressBar: React.SFC<IProps> = ({
     onKeyDown={enter}
     value={value}
     onBlur={onBlur}
-    onChange={(e) => onChangeFn(e.target.value)}
+    onChange={onChangeFn}
     onSubmit={onBlur}
     placeholder={'목적지를 검색해 주세요.'}
     name={name}

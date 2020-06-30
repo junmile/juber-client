@@ -14,6 +14,13 @@ const FindAddressContainer: React.FC = (props: React.ReactNode) => {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
 
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { name, value },
+    } = event;
+    setAddress(value);
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError, {
       enableHighAccuracy: true,
@@ -83,7 +90,6 @@ const FindAddressContainer: React.FC = (props: React.ReactNode) => {
         setLat(lat);
         setLng(lng);
         map.panTo({ lat, lng });
-        console.log('답 : ', lat, lng);
       }
     }
   };
@@ -127,7 +133,7 @@ const FindAddressContainer: React.FC = (props: React.ReactNode) => {
       enter={enterFn}
       mapRef={mapRef}
       address={address}
-      setAddress={setAddress}
+      setAddress={onInputChange}
       onInputBlur={onInputBlur}
       onPickPlace={onPickPlace}
     />
