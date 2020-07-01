@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import {
   getChat,
@@ -12,8 +12,9 @@ import { GET_CHAT, SEND_MESSAGE, SUBSCRIBE_TO_MESSAGES } from './ChatQueries';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import { SubscribeToMoreOptions } from 'apollo-boost';
 
+import * as Scroll from 'react-scroll';
+
 const ChatContainer: React.FC<any> = (props) => {
-  console.log('프롭 : ', props);
   if (!props.match.params.chatId) {
     props.history.push('/');
   }
@@ -25,15 +26,28 @@ const ChatContainer: React.FC<any> = (props) => {
 
   const [message, setMessage] = useState<string>('');
 
-  const { data: userData } = useQuery<userProfile>(USER_PROFILE);
+  const [enter, setEnter] = useState(0);
 
+  useEffect(() => {
+    Scroll.animateScroll.scrollToBottom({
+      containerId: 'chatBox',
+      duration: 100,
+    });
+  }, [enter]);
+
+  const conuntEnter = (event) => {
+    if (event.keyCode === 13) {
+      setEnter(enter + 1);
+    }
+  };
+
+  const { data: userData } = useQuery<userProfile>(USER_PROFILE);
   const { data: getChatData, loading, subscribeToMore } = useQuery<
     getChat,
     getChatVariables
   >(GET_CHAT, {
     variables: { type: 'chatId', id: parseInt(chatId, 10) },
   });
-
   const subscribeToMoreOptions: SubscribeToMoreOptions = {
     document: SUBSCRIBE_TO_MESSAGES,
     updateQuery: (prev, { subscriptionData }) => {
@@ -82,6 +96,7 @@ const ChatContainer: React.FC<any> = (props) => {
 
   return (
     <ChatPresenter
+      enterFn={conuntEnter}
       data={getChatData}
       loading={loading}
       userData={userData}

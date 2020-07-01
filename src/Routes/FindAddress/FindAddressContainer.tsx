@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import FindAddressPresenter from './FindAddressPresenter';
 import ReactDOM from 'react-dom';
 import { reverseGeoCode, geoCode } from '../../mapHelpers';
-import arrow from '../../images/arrow.gif';
-import { Marker } from 'google-maps-react';
 
 let map: google.maps.Map;
 
@@ -16,7 +14,7 @@ const FindAddressContainer: React.FC = (props: React.ReactNode) => {
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
-      target: { name, value },
+      target: { value },
     } = event;
     setAddress(value);
   };

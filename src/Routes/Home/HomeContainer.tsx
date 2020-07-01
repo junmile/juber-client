@@ -87,7 +87,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     navigator.geolocation.getCurrentPosition(
       this.handleGeoSuccess,
       this.handleGeoError,
-      { maximumAge: 60000, timeout: 10000, enableHighAccuracy: true }
+      { maximumAge: 60000, timeout: 3000, enableHighAccuracy: true }
     );
   }
 

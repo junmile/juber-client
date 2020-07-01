@@ -12,6 +12,7 @@ const Chat = styled.div`
   height: 80vh;
   overflow: scroll;
   padding: 0 20px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -26,6 +27,7 @@ const InputCont = styled.div`
 `;
 
 interface IProps {
+  enterFn: any;
   data?: getChat;
   userData?: userProfile;
   loading: boolean;
@@ -36,6 +38,7 @@ interface IProps {
 }
 
 const ChatPresenter: React.SFC<IProps> = ({
+  enterFn,
   loading,
   data: { GetChat: { chat = null } = {} } = {},
   userData: { GetMyProfile: { user = null } = {} } = {},
@@ -48,7 +51,7 @@ const ChatPresenter: React.SFC<IProps> = ({
     <Header title={'JUBER 채팅'} />
     {!loading && chat && user && (
       <React.Fragment>
-        <Chat>
+        <Chat id={'chatBox'}>
           {chat.messages &&
             chat.messages.map((message) => {
               if (message) {
@@ -78,6 +81,7 @@ const ChatPresenter: React.SFC<IProps> = ({
             <Input
               value={messageText}
               placeholder={'메세지를 입력해 주세요.'}
+              enter={enterFn}
               onChange={(e) => {
                 onInputChange(e.target.value);
               }}

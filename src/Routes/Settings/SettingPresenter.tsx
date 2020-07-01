@@ -9,7 +9,15 @@ import basicProfilePhoto from '../../images/basicProfileStart_1.png';
 import { toast } from 'react-toastify';
 
 const Container = styled.div`
-  padding: 40px;
+  margin-top: 30px;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
 `;
 
 const Image = styled.img`

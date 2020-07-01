@@ -1,17 +1,26 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import Header from '../../Components/Header';
-import Form from '../../Components/Form';
 import Input from '../../Components/Input';
 import styled from '../../typed-components';
 import Button from '../../Components/Button';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  padding: 40px;
+  margin-top: 30px;
+  padding: 50px 20px;
+  width: 100%;
+  display: flex;
 `;
 
-const FormCont = styled.div``;
+const FormCont = styled.div`
+  flex-direction: row;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+`;
 
 const ExtendedInput = styled(Input)`
   margin-bottom: 40px;

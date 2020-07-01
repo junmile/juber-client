@@ -7,7 +7,17 @@ import styled from '../../typed-components';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  padding: 40px;
+  margin-top: 30px;
+  padding: 50px 20px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+`;
+
+const PlaceCont = styled.div`
+  margin-bottom: 40px;
 `;
 
 const BooleanDiv = styled.div`
@@ -15,7 +25,6 @@ const BooleanDiv = styled.div`
 `;
 
 const SLink = styled(Link)`
-  margin-top: 20px;
   text-decoration: underline;
   &:hover {
     color: #fcc159;
@@ -40,17 +49,19 @@ const PlacePresenter: React.SFC<IProps> = ({
       {!loading && places && places.length === 0 && (
         <BooleanDiv>'등록된 장소가 없습니다.'</BooleanDiv>
       )}
-      {!loading &&
-        places &&
-        places.map((place) => (
-          <Place
-            key={place!.id}
-            id={place!.id}
-            fav={place!.isFav}
-            name={place!.name}
-            address={place!.address}
-          />
-        ))}
+      <PlaceCont>
+        {!loading &&
+          places &&
+          places.map((place) => (
+            <Place
+              key={place!.id}
+              id={place!.id}
+              fav={place!.isFav}
+              name={place!.name}
+              address={place!.address}
+            />
+          ))}
+      </PlaceCont>
       <SLink to={'/add-place'}>장소를 등록해 주세요</SLink>
     </Container>
   </React.Fragment>

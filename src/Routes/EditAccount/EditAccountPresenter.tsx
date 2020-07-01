@@ -10,11 +10,19 @@ import PhotoInput from '../../Components/PhotoInput';
 
 import basicProfilePhoto from '../../images/basicProfileStart_1.png';
 
-const Container = styled.div``;
-
-const ExtendedForm = styled(Form)`
-  padding: 0px 40px;
+const Container = styled.div`
+  margin-top: 30px;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
 `;
+
+const ExtendedForm = styled(Form)``;
 
 const ExtendedInput = styled(Input)`
   margin-bottom: 30px;
@@ -40,12 +48,12 @@ const EditAccountPresenter: React.SFC<IProps> = ({
   loading,
   onSubmit,
 }) => (
-  <Container>
+  <ExtendedForm submitFn={onSubmit}>
     <Helmet>
       <title>Edit Account | Number</title>
     </Helmet>
     <Header title={'내 정보 변경'} backTo={'/'} />
-    <ExtendedForm submitFn={onSubmit}>
+    <Container>
       {profilePhoto && (
         <PhotoInput
           uploading={false}
@@ -82,8 +90,8 @@ const EditAccountPresenter: React.SFC<IProps> = ({
         onChange={onInputChange}
       />
       <Button value={loading ? '로딩중..' : '수정'} onClick={null} />
-    </ExtendedForm>
-  </Container>
+    </Container>
+  </ExtendedForm>
 );
 
 export default EditAccountPresenter;
