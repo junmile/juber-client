@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/juber-client/static/js/main.01cb23c1.chunk.js",
-    "main.js.map": "/juber-client/static/js/main.01cb23c1.chunk.js.map",
+    "main.js": "/juber-client/static/js/main.57212e3f.chunk.js",
+    "main.js.map": "/juber-client/static/js/main.57212e3f.chunk.js.map",
     "runtime-main.js": "/juber-client/static/js/runtime-main.26d79516.js",
     "runtime-main.js.map": "/juber-client/static/js/runtime-main.26d79516.js.map",
     "static/css/2.6010d4dc.chunk.css": "/juber-client/static/css/2.6010d4dc.chunk.css",
     "static/js/2.33c36678.chunk.js": "/juber-client/static/js/2.33c36678.chunk.js",
     "static/js/2.33c36678.chunk.js.map": "/juber-client/static/js/2.33c36678.chunk.js.map",
     "index.html": "/juber-client/index.html",
-    "precache-manifest.5eba25039dce806734af7a8a83d990e8.js": "/juber-client/precache-manifest.5eba25039dce806734af7a8a83d990e8.js",
+    "precache-manifest.ee4cafdd37f2b4be56d8ae8426a285f4.js": "/juber-client/precache-manifest.ee4cafdd37f2b4be56d8ae8426a285f4.js",
     "service-worker.js": "/juber-client/service-worker.js",
     "static/css/2.6010d4dc.chunk.css.map": "/juber-client/static/css/2.6010d4dc.chunk.css.map",
     "static/js/2.33c36678.chunk.js.LICENSE.txt": "/juber-client/static/js/2.33c36678.chunk.js.LICENSE.txt",
@@ -23,6 +23,6 @@
     "static/js/runtime-main.26d79516.js",
     "static/css/2.6010d4dc.chunk.css",
     "static/js/2.33c36678.chunk.js",
-    "static/js/main.01cb23c1.chunk.js"
+    "static/js/main.57212e3f.chunk.js"
   ]
 }
