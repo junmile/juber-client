@@ -7,13 +7,11 @@ import TOGGLE_DRIVING from './MenuQueries';
 import { toast } from 'react-toastify';
 import { GET_NEARBY_DRIVERS } from '../../Routes/Home/HomeQueries';
 
-const MenuContainer: React.FC = () => {
+const MenuContainer: React.FC = (props) => {
   const [toggleDrivingMutation] = useMutation<toggleDriving>(TOGGLE_DRIVING, {
     update(cache, { data }) {
       if (data) {
         const { ToggleDrivingMode } = data;
-        console.log('캐시 : ', cache);
-        console.log('데이타 : ', data);
         if (!ToggleDrivingMode.ok) {
           toast.error('상태를 바꿀수 없습니다.');
           return;
@@ -30,10 +28,8 @@ const MenuContainer: React.FC = () => {
           const {
             GetMyProfile: { user },
           } = query;
-          console.log('user : ', user);
 
           if (user) {
-            console.log(user.isDriving);
             user.isDriving = !user.isDriving;
           }
         }

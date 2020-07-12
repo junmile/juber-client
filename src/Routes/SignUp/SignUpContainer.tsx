@@ -16,32 +16,32 @@ import SignUpPresenter from './SignUpPresenter';
 import { VERIFY_PHONE } from '../VerifyPhone/VerifyPhoneQueries';
 
 const SignUpContainer: React.FC = (props: any) => {
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [emailCheck, setEmailCheck] = useState(false);
-  // const [password, setPassword] = useState('');
-  // const [passwordCheck, setPasswordCheck] = useState('');
-  // const [age, setAge] = useState(0);
-  // const [phoneNumber, setPhoneNumber] = useState('01047163375');
-  // const [verifyPhoneNumber, setVerifyPhoneNumber] = useState(false);
-  // const [verifyEmail, setVerifyEmail] = useState(false);
-  // const [hidden, setHidden] = useState(false);
-  // const [countryCode, setCountryCode] = useState('+82');
-  // const [token, setToken] = useState('');
-
-  const [firstName, setFirstName] = useState('승연');
-  const [lastName, setLastName] = useState('공');
-  const [email, setEmail] = useState('hyolee1003@naver.com');
+  console.log('넘어온 프롭 : ', props);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [emailCheck, setEmailCheck] = useState(false);
-  const [password, setPassword] = useState('dlwpdksgo3');
-  const [passwordCheck, setPasswordCheck] = useState('dlwpdksgo3');
-  const [age, setAge] = useState(32);
-  const [phoneNumber, setPhoneNumber] = useState('01047163375');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [age, setAge] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [verifyPhoneNumber, setVerifyPhoneNumber] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [countryCode, setCountryCode] = useState('+82');
   const [token, setToken] = useState('');
+
+  // const [firstName, setFirstName] = useState('승연');
+  // const [lastName, setLastName] = useState('공');
+  // const [email, setEmail] = useState('hyolee1003@naver.com');
+  // const [emailCheck, setEmailCheck] = useState(false);
+  // const [password, setPassword] = useState('dlwpdksgo3');
+  // const [passwordCheck, setPasswordCheck] = useState('dlwpdksgo3');
+  // const [age, setAge] = useState(32);
+  // const [phoneNumber, setPhoneNumber] = useState('01047163375');
+  // const [verifyPhoneNumber, setVerifyPhoneNumber] = useState(false);
+  // const [hidden, setHidden] = useState(false);
+  // const [countryCode, setCountryCode] = useState('+82');
+  // const [token, setToken] = useState('');
 
   const [verifyCode, setVerifyCode] = useState('');
 
@@ -65,7 +65,6 @@ const SignUpContainer: React.FC = (props: any) => {
     emailVerificationVariables
   >(EMAIL_VERIFICATION, {
     onCompleted(data) {
-      console.log('데이터 : ', data);
       if (data.EmailSignUp) {
         if (data.EmailSignUp.token) {
           logInFn({ variables: { token: data.EmailSignUp.token } });
@@ -97,6 +96,16 @@ const SignUpContainer: React.FC = (props: any) => {
       }
     },
   });
+  useEffect(() => {
+    if (props.location.state) {
+      if (props.location.state.verifyPhoneNumber) {
+        setVerifyPhoneNumber(true);
+        setPhoneNumber(props.location.state.phoneNumber);
+        setCountryCode(props.location.state.countryCode);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     setEmailCheck(false);
   }, [email]);
@@ -143,23 +152,23 @@ const SignUpContainer: React.FC = (props: any) => {
   };
 
   const submitFn = async () => {
-    console.log(emailCheck);
-    console.log(
-      ' 섭밋 : ',
-      '이름 :',
-      firstName,
-      '성 :',
-      lastName,
-      '이멜 :',
-      email,
+    // console.log(emailCheck);
+    // console.log(
+    //   ' 섭밋 : ',
+    //   '이름 :',
+    //   firstName,
+    //   '성 :',
+    //   lastName,
+    //   '이멜 :',
+    //   email,
 
-      '비번 :',
-      password,
-      '나이 :',
-      age,
-      '번호 :',
-      phoneNumber
-    );
+    //   '비번 :',
+    //   password,
+    //   '나이 :',
+    //   age,
+    //   '번호 :',
+    //   phoneNumber
+    // );
     if (password === passwordCheck) {
       //id 유효성
       const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -209,14 +218,13 @@ const SignUpContainer: React.FC = (props: any) => {
         verifyPhoneNumber &&
         emailCheck
       ) {
-        console.log('이메일사인업');
         emailSignUpFn({
           variables: {
             firstName,
             lastName,
             email,
             password,
-            age,
+            age: Number(age),
             phoneNumber: countryCode + phoneNumber,
           },
         });

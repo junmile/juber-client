@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '../../typed-components';
 import Button from '../Button';
+import basicProfileStart from '../../images/basicProfileStart_1.png';
 
 interface IProps {
   pickUpAddress: string;
@@ -87,16 +88,16 @@ const RidePopUp: React.SFC<IProps> = ({
       <Data>{distance}</Data>
       <Title>시간</Title>
       <Data>{duration}</Data>
-      <Title>Passenger:</Title>
+      <Title>승객</Title>
       <Passenger>
-        <Img src={passengerPhoto} />
+        {passengerPhoto && <Img src={passengerPhoto} />}
+        {!passengerPhoto && <Img src={basicProfileStart} />}
         <Data>{passengerName}</Data>
       </Passenger>
     </SubContainer>
     <Button
       onClick={() => {
         acceptRideFn({ variables: { rideId: id } });
-        // crate chat `
       }}
       value={'수락'}
     />

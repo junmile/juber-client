@@ -14,6 +14,7 @@ const Place = styled.div`
 
 const Container = styled.div`
   margin-left: 10px;
+  cursor: pointer;
 `;
 
 const Name = styled.span`
@@ -37,6 +38,7 @@ interface IProps {
   name: string;
   address: string;
   onStarPress: any;
+  onClick?: any;
 }
 
 const PlacePresenter: React.SFC<IProps> = ({
@@ -44,12 +46,13 @@ const PlacePresenter: React.SFC<IProps> = ({
   fav,
   name,
   address,
+  onClick,
 }) => (
   <Place>
     <Icon onClick={onStarPress as any}>
       {fav ? <Heart src={heart1} /> : <Heart src={heart2} />}
     </Icon>
-    <Container>
+    <Container onClick={onClick}>
       <Name>{name}</Name>
       <Address>{address}</Address>
     </Container>

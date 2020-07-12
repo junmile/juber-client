@@ -10,6 +10,7 @@ import { LOG_USER_IN } from '../../sharedQueries';
 interface IState {
   verificationKey: string;
   phoneNumber: string;
+  countryCode: string;
 }
 
 interface IProps extends RouteComponentProps<any> {
@@ -26,12 +27,13 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
       this.state = {
         verificationKey: '',
         phoneNumber: props.location.state.phoneNumber || '',
+        countryCode: props.location.state.countryCode || '',
       };
     }
   }
 
   public render() {
-    const { verificationKey, phoneNumber } = this.state;
+    const { verificationKey, phoneNumber, countryCode } = this.state;
     return (
       <Mutation mutation={LOG_USER_IN}>
         {(logUserIn) => (
@@ -39,10 +41,11 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
             mutation={VERIFY_PHONE}
             variables={{
               key: verificationKey,
-              phoneNumber,
+              phoneNumber: countryCode + phoneNumber,
             }}
             onCompleted={(data) => {
               const { CompletePhoneVerification } = data;
+              const { history } = this.props;
               if (CompletePhoneVerification.ok) {
                 if (CompletePhoneVerification.token) {
                   logUserIn({
@@ -50,8 +53,19 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
                       token: CompletePhoneVerification.token,
                     },
                   });
+                  toast.success('확인되었습니다. 로그인 되었습니다.');
+                } else {
+                  toast.error('가입된 정보가 없습니다. 회원가입을 해주세요.');
+                  history.push({
+                    pathname: '/sign-up',
+                    state: {
+                      token: CompletePhoneVerification.token,
+                      verifyPhoneNumber: true,
+                      phoneNumber,
+                      countryCode,
+                    },
+                  });
                 }
-                toast.success('확인되었습니다. 로그인하세요');
               } else {
                 toast.error(CompletePhoneVerification.error);
               }

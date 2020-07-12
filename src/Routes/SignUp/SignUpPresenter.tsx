@@ -276,9 +276,9 @@ const SignUpPresenter: React.SFC<IProps> = ({
           onChange={(e) => setAge(e.target.value)}
         ></AgeInput>
       </AgeCont>
-      <Span>핸드폰번호</Span>
       {!hidden && !verifyPhoneNumber && (
         <PhoneVerification>
+          <Span>핸드폰번호</Span>
           <CountrySelect
             value={countryCode}
             name={'countryCode'}
@@ -327,6 +327,7 @@ const SignUpPresenter: React.SFC<IProps> = ({
       )}
       {hidden && token === '' && !verifyPhoneNumber && (
         <HiddenInput>
+          <Span>핸드폰번호</Span>
           <VerifyCont>
             <Verification
               placeholder={'전송된 문자를 확인 후 인증번호를 기입해 주세요.'}
@@ -335,7 +336,6 @@ const SignUpPresenter: React.SFC<IProps> = ({
             <VerificationButton
               onClick={(e) => {
                 e.preventDefault();
-                console.log('눌림');
                 completePhoneVerificationFn({
                   variables: {
                     key: verifyCode,

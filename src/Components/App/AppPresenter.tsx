@@ -21,7 +21,7 @@ interface IProps {
 }
 
 const AppPresenter: React.SFC<IProps> = ({ isLoggedIn }) => (
-  <BrowserRouter>
+  <BrowserRouter basename={'/juber-client'}>
     {isLoggedIn ? <LoggedInRoutes /> : <LoggedOutRoutes />}
   </BrowserRouter>
 );

@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import bgImage from '../../images/bgimage.jpg';
+// import bgImage from '../../images/bgimage.jpg';
 import styled from '../../typed-components';
 
 const Container = styled.div`
@@ -10,26 +10,40 @@ const Container = styled.div`
 
 const Header = styled.header`
   background: #fcc159;
-  border-radius: 20px 20px 0 0;
   width: 100%;
-  padding: 40px;
   padding-bottom: 30px;
-  align-items: center;
-  justify-content: center;
   color: white;
   font-weight: bold;
   font-size: 30px;
   text-align: center;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
-const Title = styled.h1``;
+const Title = styled.h1`
+  color: ${(props) => props.theme.yellowColor};
+  width: 140px;
+  height: 200px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  background-color: white;
+`;
 
 const Footer = styled.div`
   background: white;
-  height: 100%;
-  border-radius: 0 0 20px 20px;
+  height: 50%;
   padding: 40px;
   padding-top: 30px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
 `;
 
 const Subtitle = styled.h2`
@@ -38,7 +52,7 @@ const Subtitle = styled.h2`
 
 const FakeInput = styled.div`
   margin: 50px 0px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 300;
 `;
 
@@ -71,7 +85,7 @@ const EmailLink = styled.span`
 const Background = styled.div`
   color: #4a4a4a;
   height: 100%;
-  background: url(${bgImage});
+  background-color: white;
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
@@ -79,12 +93,11 @@ const Background = styled.div`
   justify-content: center;
 `;
 const Body = styled.div`
-  box-shadow: 0 3px 30px rgba(255, 255, 255, 0.55);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  height: 70%;
-  width: 400px;
+  width: 100%;
+  height: 100%;
 `;
 
 const EmailLogin = styled.div`
@@ -98,8 +111,8 @@ const SignUpLink = styled.span`
 `;
 
 const SignUp = styled.div`
-  height: 300px;
   padding: 10px 0;
+  margin-bottom: 40px;
   font-size: 16px;
 `;
 

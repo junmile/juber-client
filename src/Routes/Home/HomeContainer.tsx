@@ -46,6 +46,8 @@ interface IState {
 }
 
 interface IProps extends RouteComponentProps<any> {
+  toAddress?: string;
+  fromAddress?: string;
   google: any;
   reportLocation: any;
 }
@@ -80,14 +82,24 @@ class HomeContainer extends React.Component<IProps, IState> {
     super(props);
     this.mapRef = React.createRef();
     this.drivers = [];
+    if (props.fromAddress) {
+      this.setState({ fromAddress: props.fromAddress });
+    }
+    if (props.location.state) {
+      this.state.toAddress = props.location.state.toAddress;
+    }
   }
 
   public componentDidMount() {
+    const { history } = this.props;
+    if (this.props.location) {
+      history.replace(this.props.location.state!);
+    }
     //position을 관찰할 예정, geolocation을 통해 반환된 position값으로 this.handleGeoSuccess 실행
     navigator.geolocation.getCurrentPosition(
       this.handleGeoSuccess,
-      this.handleGeoError,
-      { maximumAge: 60000, timeout: 3000, enableHighAccuracy: true }
+      function (error) {},
+      { maximumAge: Infinity, timeout: 10000, enableHighAccuracy: true }
     );
   }
 
@@ -249,8 +261,6 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public createPath = () => {
     const { toLat, toLng, lat, lng } = this.state;
-    console.log('lat, lng : ', lat, ',', lng);
-    console.log('toLat, toLng : ', toLat, ',', toLng);
     if (this.directions) {
       this.directions.setMap(null);
     }
@@ -386,15 +396,14 @@ class HomeContainer extends React.Component<IProps, IState> {
     }
   };
 
-  public handleSubscriptionUpdate = (data) => {
-    console.log(data);
-  };
-
   public handleRideAcceptance = (data: acceptRide) => {
     const { history } = this.props;
     const { UpdateRideStatus } = data;
-    if (UpdateRideStatus) {
+    if (UpdateRideStatus.ok) {
       history.push(`/ride/${UpdateRideStatus.rideId}`);
+    } else {
+      toast.error(UpdateRideStatus.error);
+      window.location.reload(true);
     }
   };
 

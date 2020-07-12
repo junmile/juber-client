@@ -33,14 +33,14 @@ class PhoneLoginContainer extends React.Component<
         variables={{ phoneNumber: `${countryCode}${phoneNumber}` }}
         onCompleted={(data) => {
           const { StartPhoneVerification } = data;
-          const phone = `${countryCode}${phoneNumber}`;
           if (StartPhoneVerification.ok) {
             toast.success('문자를 확인해 주세요.');
             setTimeout(() => {
               history.push({
                 pathname: '/verify-phone',
                 state: {
-                  phoneNumber: phone,
+                  countryCode,
+                  phoneNumber,
                 },
               });
             }, 2000);

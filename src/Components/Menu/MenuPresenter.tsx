@@ -18,7 +18,7 @@ const Header = styled.div`
 const SLink = styled(Link)`
   font-size: 18px;
   display: block;
-  margin-left: 15px;
+  margin-left: 30px;
   margin-bottom: 25px;
   font-weight: 400;
 `;
@@ -77,12 +77,27 @@ const ToggleDriving = styled<IToggleProps, any>('button')`
   -webkit-appearance: none;
   background-color: ${(props) =>
     props.isDriving ? props.theme.yellowColor : props.theme.greenColor};
-  width: 100%;
+  width: 80%;
   color: white;
   font-size: 18px;
+  height: 60px;
   border: 0;
   padding: 15px 0px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3 px;
+  &:hover {
+    color: ${(props) =>
+      props.isDriving ? props.theme.yellowColor : props.theme.greenColor};
+    background-color: white;
+    border: 2px solid
+      ${(props) =>
+        props.isDriving ? props.theme.yellowColor : props.theme.greenColor};
+  }
 `;
 
 interface IToggleProps {

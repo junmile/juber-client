@@ -54,8 +54,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "precodegen": "apollo schema:download --endpoint=http://localhost:4000/graphql",
-    "codegen": "apollo codegen:generate src/types/api.d.ts --queries=src/**/*.ts --addTypename --localSchemaFile=schema.json --target typescript --outputFlat"
+    "precodegen": "apollo schema:download --endpoint=https://juber-server.herokuapp.com/graphql/",
+    "codegen": "apollo codegen:generate src/types/api.d.ts --queries=src/**/*.ts --addTypename --localSchemaFile=schema.json --target typescript --outputFlat",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -74,6 +76,8 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
-    "@types/googlemaps": "^3.39.4"
-  }
+    "@types/googlemaps": "^3.39.4",
+    "gh-pages": "^3.1.0"
+  },
+  "homepage": "https://junmile.github.io/juber-client"
 }

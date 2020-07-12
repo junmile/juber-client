@@ -6,14 +6,15 @@ import {
   userProfile,
   updateRide,
   updateRideVariables,
-  getChat,
-  getChatVariables,
+  // getChat,
+  // getChatVariables,
 } from '../../types/api';
 import { useQuery, useMutation } from 'react-apollo';
 import { GET_RIDE, RIDE_SUBSCRIPTION, UPDATE_RIDE_STATUS } from './RideQueries';
 import { USER_PROFILE } from '../../sharedQueries.queries';
 import { SubscribeToMoreOptions } from 'apollo-boost';
-import { GET_CHAT, SUBSCRIBE_TO_MESSAGES } from '../Chat/ChatQueries';
+import { useHistory } from 'react-router-dom';
+// import { GET_CHAT } from '../Chat/ChatQueries';
 
 const RideContainer: React.FC<any> = (props) => {
   const {
@@ -21,8 +22,6 @@ const RideContainer: React.FC<any> = (props) => {
       params: { rideId },
     },
   } = props;
-
-  console.log(props);
 
   const { data: getRideQuery, loading, subscribeToMore } = useQuery<
     getRide,
@@ -42,7 +41,7 @@ const RideContainer: React.FC<any> = (props) => {
         },
       } = subscriptionData;
 
-      if (status === 'FINISHED') {
+      if (status === 'FINISHED' || status === 'CANCELED') {
         window.location.href = '/';
       }
     },
@@ -50,14 +49,19 @@ const RideContainer: React.FC<any> = (props) => {
 
   subscribeToMore(subscribeOptions);
 
-  const { data: chatData } = useQuery<getChat, getChatVariables>(GET_CHAT, {
-    variables: { type: 'rideId', id: parseInt(rideId, 10) },
-  });
+  // const { data: chatData } = useQuery<getChat, getChatVariables>(GET_CHAT, {
+  //   variables: { type: 'rideId', id: parseInt(rideId, 10) },
+  // });
 
   const { data: userData } = useQuery<userProfile>(USER_PROFILE);
   const [updateRideMutation] = useMutation<updateRide, updateRideVariables>(
     UPDATE_RIDE_STATUS
   );
+  const history = useHistory();
+
+  const goHome = () => {
+    history.push('/');
+  };
 
   return (
     <RidePresenter
@@ -65,6 +69,7 @@ const RideContainer: React.FC<any> = (props) => {
       loading={loading}
       data={getRideQuery}
       updateRideFn={updateRideMutation}
+      goHome={goHome}
     />
   );
 };

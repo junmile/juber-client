@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddPlacePresenter from './AddPlacePresenter';
 import { ADD_PLACE } from './AddPlaceQuery';
 import { GET_PLACES } from '../../sharedQueries.queries';
@@ -28,7 +28,6 @@ const AddPlaceContainer = (props) => {
 
   const [addPlaceFn, { loading }] = useMutation(ADD_PLACE, {
     onCompleted(data) {
-      console.log(data, 'onCompleted');
       const { AddPlace } = data;
       if (AddPlace.ok) {
         toast.success('장소가 추가 되었습니다.');
@@ -57,15 +56,11 @@ const AddPlaceContainer = (props) => {
             '지명을 올바르게 입력해 주시거나, 지도를 통해 장소를 선택해 주세요.'
           );
         }
-        console.log(correctAddress);
       }
     }
   };
 
   const onSubmit = () => {
-    console.log('name : ', title);
-    console.log('address : ', address);
-    console.log('lat : ', lat, ' lng : ', lng);
     if (title === '') {
       toast.error('등록하실 장소에대해 이름을 작성해 주세요.');
       return;
@@ -74,7 +69,6 @@ const AddPlaceContainer = (props) => {
       toast.error('등록하실 장소를 찾아 주세요.');
       return;
     }
-    console.log('마지막 : ', correctAddress);
     if (correctAddress === true) {
       addPlaceFn({
         variables: { name: title, address, lat, lng, isFav: false },

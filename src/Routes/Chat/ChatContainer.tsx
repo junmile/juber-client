@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import {
   getChat,
@@ -27,19 +27,6 @@ const ChatContainer: React.FC<any> = (props) => {
   const [message, setMessage] = useState<string>('');
 
   const [enter, setEnter] = useState(0);
-
-  useEffect(() => {
-    Scroll.animateScroll.scrollToBottom({
-      containerId: 'chatBox',
-      duration: 100,
-    });
-  }, [enter]);
-
-  const conuntEnter = (event) => {
-    if (event.keyCode === 13) {
-      setEnter(enter + 1);
-    }
-  };
 
   const { data: userData } = useQuery<userProfile>(USER_PROFILE);
   const { data: getChatData, loading, subscribeToMore } = useQuery<
@@ -93,9 +80,27 @@ const ChatContainer: React.FC<any> = (props) => {
   const [sendMessageMutation] = useMutation<sendMessage, sendMessageVariables>(
     SEND_MESSAGE
   );
+  const conuntEnter = (event) => {
+    if (event.keyCode === 13 && message !== '') {
+      setEnter(enter + 1);
+    }
+  };
+  useEffect(() => {
+    Scroll.animateScroll.scrollToBottom({
+      containerId: 'chatBox',
+      duration: 200,
+    });
+  }, [enter]);
+
+  const back = (e) => {
+    e.preventDefault();
+    const { history } = props;
+    history.goBack();
+  };
 
   return (
     <ChatPresenter
+      back={back}
       enterFn={conuntEnter}
       data={getChatData}
       loading={loading}

@@ -9,7 +9,13 @@ import Form from '../../Components/App/Form';
 const Container = styled.div``;
 
 const ExtendedForm = styled(Form)`
-  padding: 40px;
+  margin-top: 30px;
+  padding: 50px 20px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
 `;
 
 const ExtendedInput = styled(Input)`

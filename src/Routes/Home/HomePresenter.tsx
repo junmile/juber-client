@@ -117,7 +117,7 @@ const HomePresenter: React.SFC<IProps> = ({
           value={`JUBER 요청 (${price}원)`}
         />
       )}
-      {ride && (
+      {ride && ride.status !== 'CANCELED' && (
         <RidePopUp
           id={ride.id}
           pickUpAddress={ride.pickUpAddress}

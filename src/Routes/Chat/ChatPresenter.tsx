@@ -20,6 +20,29 @@ const Chat = styled.div`
     display: none;
   }
   overflow: scroll;
+  padding-bottom: 80px;
+`;
+
+const HiddenDiv = styled.div``;
+
+const CloseCont = styled.div`
+  width: 100%;
+  display: flex;
+  position: absolute;
+  flex-direction: row;
+  top: 0;
+  right: 20px;
+`;
+
+const CloseButton = styled.div`
+  margin-top: 20px;
+  margin-left: auto;
+  color: white;
+  text-align: end;
+  &:hover {
+    color: red;
+  }
+  cursor: pointer;
 `;
 
 const InputCont = styled.div`
@@ -35,6 +58,7 @@ interface IProps {
   sendMessageFn: any;
   onInputChange: any;
   chatId: number;
+  back: any;
 }
 
 const ChatPresenter: React.SFC<IProps> = ({
@@ -46,9 +70,13 @@ const ChatPresenter: React.SFC<IProps> = ({
   onInputChange,
   sendMessageFn,
   chatId,
+  back,
 }) => (
   <Container>
     <Header title={'JUBER 채팅'} />
+    <CloseCont>
+      <CloseButton onClick={back}>닫기</CloseButton>
+    </CloseCont>
     {!loading && chat && user && (
       <React.Fragment>
         <Chat id={'chatBox'}>
@@ -66,6 +94,7 @@ const ChatPresenter: React.SFC<IProps> = ({
               return null;
             })}
         </Chat>
+        <HiddenDiv id={'hide'} />
         <InputCont>
           <Form
             submitFn={() => {

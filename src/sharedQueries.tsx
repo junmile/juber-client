@@ -7,7 +7,7 @@ export const LOG_USER_IN = gql`
 `;
 
 export const LOG_USER_OUT = gql`
-  mutation logUserOut {
+  mutation logUserOut($token: String!) {
     logUserOut @client
   }
 `;
