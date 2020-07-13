@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b3eb28db8c5a03fef394bf61d2ae9ca7",
+    "revision": "6822ba0524cb5bf8de4e719d3b8dd38d",
     "url": "/juber-client/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/juber-client/static/js/2.33c36678.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "21292bd3dd58c129d45a",
-    "url": "/juber-client/static/js/main.4ed81332.chunk.js"
+    "revision": "2362f36d75ccab888868",
+    "url": "/juber-client/static/js/main.4374be38.chunk.js"
   },
   {
     "revision": "bbcd62402262c1760c00",
