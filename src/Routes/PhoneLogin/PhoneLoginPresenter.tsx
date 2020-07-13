@@ -64,10 +64,8 @@ const Button = styled.button`
 interface IProps {
   countryCode: string;
   phoneNumber: string;
-  onInputChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
-  onSubmit: (event: React.ChangeEvent<HTMLFormElement>) => void;
+  onInputChange: any;
+  onSubmit: any;
   loading: boolean;
 }
 

@@ -73,7 +73,7 @@ const Juber = styled.div`
   color: white;
 `;
 
-const ToggleDriving = styled<IToggleProps, any>('button')`
+const ToggleDriving = styled<any>('button')`
   -webkit-appearance: none;
   background-color: ${(props) =>
     props.isDriving ? props.theme.yellowColor : props.theme.greenColor};

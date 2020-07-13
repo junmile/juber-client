@@ -80,7 +80,6 @@ const AddPlacePresenter: React.SFC<IProps> = ({
         <ExtendedLink to={'/find-address'}>지도에서 장소 선택</ExtendedLink>
         {(pickedAddress || address !== '') && (
           <SubmitInput
-            type={'submit'}
             onClick={onSubmit}
             value={!loading ? '장소 추가' : '장소 추가중'}
           />

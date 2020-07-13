@@ -32,7 +32,7 @@ interface IProps {
   placeholder?: string;
   type?: string;
   required?: boolean;
-  value?: string;
+  value?: any;
   name?: string;
   onChange?: any;
   enter?: any;

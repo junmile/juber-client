@@ -354,7 +354,6 @@ const SignUpPresenter: React.SFC<IProps> = ({
       )}
 
       <SubmitInput
-        type={'submit'}
         value={'가입'}
         onClick={(e) => {
           submitFn();

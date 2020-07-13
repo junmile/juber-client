@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '../../typed-components';
 
-const Container = styled<{ mine: boolean }, any>('div')`
+const Container = styled<any>('div')`
   background-color: ${(props) =>
     props.mine ? props.theme.redColor : props.theme.greenColor};
   color: white;

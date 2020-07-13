@@ -35,7 +35,7 @@ const Input = styled.input`
 interface IProps {
   uploading: boolean;
   fileUrl: string;
-  onChange: (event: React.ChangeEventHandler<HTMLInputElement>) => void;
+  onChange: any;
 }
 const PhotoInput: React.SFC<IProps> = ({ uploading, fileUrl, onChange }) => (
   <Container>

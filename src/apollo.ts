@@ -48,7 +48,7 @@ const wsLink = new WebSocketLink({
   uri: isDev
     ? // 'wss://juber-server.herokuapp.com/subscription'
       'ws://localhost:4000/subscription'
-    : 'ws://juber-server.herokuapp.com/subscription',
+    : 'wss://juber-server.herokuapp.com/subscription',
 });
 
 const combinedLinks = split(
