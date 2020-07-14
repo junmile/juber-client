@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/juber-client/precache-manifest.0673ac7015a3a571564c986db4ef04f0.js"
+  "/juber-client/precache-manifest.b8cb5cc3796210644e181f53e457be87.js"
 );
 
 self.addEventListener('message', (event) => {
