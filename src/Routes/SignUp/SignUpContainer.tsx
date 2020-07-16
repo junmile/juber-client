@@ -16,7 +16,6 @@ import SignUpPresenter from './SignUpPresenter';
 import { VERIFY_PHONE } from '../VerifyPhone/VerifyPhoneQueries';
 
 const SignUpContainer: React.FC = (props: any) => {
-  console.log('넘어온 프롭 : ', props);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -206,7 +205,7 @@ const SignUpContainer: React.FC = (props: any) => {
         toast.error('핸드폰 인증을 받아주세요.');
       }
 
-      var ageReg = /^[0-9]*$/;
+      const ageReg = /^[0-9]*$/;
       if (!ageReg.test(String(age))) {
         toast.error('나이는 숫자만 입력 가능합니다.');
       }

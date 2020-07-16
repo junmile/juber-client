@@ -98,7 +98,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     //position을 관찰할 예정, geolocation을 통해 반환된 position값으로 this.handleGeoSuccess 실행
     navigator.geolocation.getCurrentPosition(
       this.handleGeoSuccess,
-      function (error) {},
+      this.handleGeoError,
       { maximumAge: Infinity, timeout: 10000, enableHighAccuracy: true }
     );
   }
@@ -164,7 +164,9 @@ class HomeContainer extends React.Component<IProps, IState> {
       },
     };
     this.userMarker = new maps.Marker(userMarkerOptions);
-    if (this.userMarker) this.userMarker.setMap(this.map);
+    if (this.userMarker) {
+      this.userMarker.setMap(this.map);
+    }
 
     const watchOptions: PositionOptions = {
       //배터리를 더소모해서 좀더 높은 정확성을 갖는다
@@ -201,7 +203,7 @@ class HomeContainer extends React.Component<IProps, IState> {
   };
 
   public handleGeoError = () => {
-    console.log('No location');
+    console.log('GeoLocation을 통해 위치를 가져오는중 실패하였습니다.');
   };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -85,6 +85,7 @@ class EditAccountContainer extends React.Component<IProps, IState> {
       target: { name, value, files },
     } = event;
     if (files) {
+      console.log('파일 : ', files);
       this.setState({
         uploading: true,
       });

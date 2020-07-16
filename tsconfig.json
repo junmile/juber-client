@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "build/dist",
     "target": "es5",
     "lib": ["es6", "dom", "ESNext.AsyncIterable"],
     "allowJs": true,
@@ -17,5 +19,14 @@
     "jsx": "react",
     "strictPropertyInitialization": false
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts"
+  ]
 }

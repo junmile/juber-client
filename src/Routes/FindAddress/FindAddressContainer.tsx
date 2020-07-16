@@ -6,7 +6,7 @@ import { reverseGeoCode, geoCode } from '../../mapHelpers';
 let map: google.maps.Map;
 
 const FindAddressContainer: React.FC = (props: React.ReactNode) => {
-  let mapRef: any = React.useRef();
+  const mapRef: any = React.useRef();
   const [address, setAddress] = useState('');
 
   const [lat, setLat] = useState(0);
