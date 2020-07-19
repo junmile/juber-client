@@ -13,11 +13,7 @@ console.log('isDev? : ', isDev);
 
 const getToken = () => {
   const token = localStorage.getItem('jwt');
-  if (token) {
-    return token;
-  } else {
-    return '';
-  }
+  return token || '';
 };
 
 const cache = new InMemoryCache();
@@ -33,8 +29,8 @@ const authMiddleware = new ApolloLink((operation: Operation, forward: any) => {
 
 const httpLink = new HttpLink({
   uri: isDev
-    ? // 'https://localhost:-server.herokuapp.com/graphql'
-      'http://localhost:4000/graphql'
+    ? // 'http://localhost:4000/graphql'
+      'https://juber-server.herokuapp.com/graphql'
     : 'https://juber-server.herokuapp.com/graphql',
 });
 
@@ -46,8 +42,8 @@ const wsLink = new WebSocketLink({
     reconnect: true,
   },
   uri: isDev
-    ? // 'wss://juber-server.herokuapp.com/subscription'
-      'ws://localhost:4000/subsscription'
+    ? // 'ws://localhost:4000/subsscription'
+      'wss://juber-server.herokuapp.com/subscription'
     : 'wss://juber-server.herokuapp.com/subscription',
 });
 
