@@ -49,28 +49,13 @@ const PlacePresenter: React.SFC<IProps> = ({
   onClick,
 }) => (
   <Place>
-    {fav && (
-      <>
-        <Icon onClick={onStarPress as any}>
-          {fav ? <Heart src={heart1} /> : <Heart src={heart2} />}
-        </Icon>
-        <Container onClick={onClick}>
-          <Name>{name}</Name>
-          <Address>{address}</Address>
-        </Container>
-      </>
-    )}
-    {!fav && (
-      <>
-        <Icon onClick={onStarPress as any}>
-          {fav ? <Heart src={heart1} /> : <Heart src={heart2} />}
-        </Icon>
-        <Container onClick={onClick}>
-          <Name>{name}</Name>
-          <Address>{address}</Address>
-        </Container>
-      </>
-    )}
+    <Icon onClick={onStarPress as any}>
+      {fav ? <Heart src={heart1} /> : <Heart src={heart2} />}
+    </Icon>
+    <Container onClick={onClick}>
+      <Name>{name}</Name>
+      <Address>{address}</Address>
+    </Container>
   </Place>
 );
 
