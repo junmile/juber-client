@@ -89,15 +89,19 @@ const SettingsPresenter: React.SFC<IProps> = ({
       </GridLink>
       {!placesLoading &&
         places &&
-        places.map((place) => (
-          <Place
-            key={place!.id}
-            id={place!.id}
-            fav={place!.isFav}
-            name={place!.name}
-            address={place!.address}
-          />
-        ))}
+        places.map(
+          (place) =>
+            place &&
+            place.isFav && (
+              <Place
+                key={place!.id}
+                id={place!.id}
+                fav={place!.isFav}
+                name={place!.name}
+                address={place!.address}
+              />
+            )
+        )}
       <SLink to={'/places'}>자주가는 주소</SLink>
       <FakeLink
         onClick={() => {
