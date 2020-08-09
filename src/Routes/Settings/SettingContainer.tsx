@@ -3,7 +3,7 @@ import { Mutation, Query } from 'react-apollo';
 import { getPlaces, userProfile } from '../../types/api';
 import { LOG_USER_OUT } from '../../sharedQueries';
 import { USER_PROFILE, GET_PLACES } from '../../sharedQueries.queries';
-import SettingsPresenter from './SettingPresenter';
+import SettingPresenter from './SettingPresenter';
 
 class SettingsContainer extends React.Component {
   public render() {
@@ -14,7 +14,7 @@ class SettingsContainer extends React.Component {
             {({ data: userData, loading: userDataLoading }) => (
               <Query<getPlaces> query={GET_PLACES}>
                 {({ data: placesData, loading: placesLoading }) => (
-                  <SettingsPresenter
+                  <SettingPresenter
                     userDataLoading={userDataLoading}
                     placesLoading={placesLoading}
                     userData={userData}
@@ -31,4 +31,4 @@ class SettingsContainer extends React.Component {
   }
 }
 
-export default SettingsContainer;
+export default SettingContainer;

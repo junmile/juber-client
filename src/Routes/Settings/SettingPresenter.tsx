@@ -62,7 +62,7 @@ interface IProps {
   placesLoading: boolean;
 }
 
-const SettingsPresenter: React.SFC<IProps> = ({
+const SettingPresenter: React.SFC<IProps> = ({
   logUserOut,
   userData: { GetMyProfile: { user = null } = {} } = {},
   placesData: { GetMyPlaces: { places = null } = {} } = {},
@@ -115,4 +115,4 @@ const SettingsPresenter: React.SFC<IProps> = ({
   </React.Fragment>
 );
 
-export default SettingsPresenter;
+export default SettingPresenter;
