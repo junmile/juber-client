@@ -5,7 +5,7 @@ import { LOG_USER_OUT } from '../../sharedQueries';
 import { USER_PROFILE, GET_PLACES } from '../../sharedQueries.queries';
 import SettingPresenter from './SettingPresenter';
 
-class SettingsContainer extends React.Component {
+class SettingContainer extends React.Component {
   public render() {
     return (
       <Mutation mutation={LOG_USER_OUT}>
